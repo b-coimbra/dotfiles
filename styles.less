@@ -1,0 +1,205 @@
+/*
+Atom's styles.less file.
+*/
+
+@main: #e42157;
+
+atom-text-editor {
+    .line-number {
+        font-family: Consolas !important;
+    }
+
+    .line.cursor-line, .cursor-line {
+        background-color: transparent !important;
+    }
+}
+
+atom-text-editor /deep/ .entity.name.tag {
+    text-decoration: none;
+}
+
+/* ====== Edited colors ======*/
+
+.amu-paint-cursor atom-text-editor .gutter .cursor-line-no-selection {
+    color: #ff79bc;
+    font-weight: bold;
+}
+
+.amu-paint-cursor atom-text-editor .bracket-matcher .region {
+    border-color: unset !important;
+    box-shadow: unset !important;
+}
+
+.syntax--entity.syntax--name.syntax--tag {
+    color: #ea6b99 !important;
+}
+
+span.syntax--source {
+    color: #d4d4d4 !important;
+}
+
+.syntax--storage {
+    color: #6bb795 !important;
+}
+
+.syntax--keyword.syntax--control {
+    color: #b68bbd !important;
+}
+
+.syntax--keyword {
+    color: #b1699a !important;
+}
+
+// .syntax--constant.syntax--numeric {
+//     color: #5bca98 !important;
+// }
+
+.syntax--support.syntax--function {
+    color: #7ba9af !important;
+}
+
+.syntax--keyword.syntax--other.syntax--special-method {
+    color: #e27272 !important;
+}
+
+.syntax--constant.syntax--variable {
+    color: #78bba3 !important;
+}
+
+.syntax--string {
+    color: #9a9a9a !important;
+}
+
+.syntax--entity.syntax--other.syntax--attribute-name {
+    color: #8cacbf !important;
+}
+
+span.syntax--entity.syntax--other.syntax--attribute-name.syntax--class.syntax--css {
+    color: #ce8cbf !important;
+}
+
+span.syntax--entity.syntax--other.syntax--attribute-name.syntax--pseudo-class.syntax--css {
+    color: #bb7688 !important;
+}
+
+span.syntax--entity.syntax--other.syntax--attribute-name.syntax--id.syntax--css {
+    color: #ce93c1!important
+}
+
+//////////////////////////////////////////////////////////////
+
+atom-text-editor.editor .linter-highlight.linter-warning.linter-gutter, .linter-highlight.linter-warning.linter-gutter {
+    color: @main !important;
+}
+
+#linter-tooltip linter-message.warning {
+    background-color: @main !important;
+}
+
+atom-text-editor.editor .linter-highlight.linter-warning .region, .linter-highlight.linter-warning .region,atom-text-editor.editor .linter-highlight.linter-error .region, .linter-highlight.linter-error .region {
+    // border-bottom: 1px dotted @main !important;
+    border-bottom: none !important;
+}
+
+#linter-tooltip linter-message.warning:last-child::before {
+    border-color: transparent transparent @main @main !important;
+}
+
+.region:after, .region:before {
+    position: absolute !important;
+    top: 10px;
+}
+
+.highlight.linter-highlight.linter-warning .region:after {
+    content: "›";
+}
+
+.highlight.linter-highlight.linter-warning .region:before {
+    content: "‹";
+    right: 0;
+}
+
+/* =================== */
+
+atom-text-editor .gutter .line-number.cursor-line, atom-text-editor  .gutter .line-number.cursor-line,   .gutter .line-number.cursor-line {
+    background-color: transparent;
+    // box-shadow: inset 2px 0 @main;
+}
+
+atom-text-editor .bracket-matcher .region {
+    position: absolute;
+    border-bottom: none !important;
+    width: 3px !important;
+    height: 3px !important;
+    border-radius: 50%;
+    background: #fff;
+    margin: 18px 0 0 3px;
+}
+
+.scrollbars-visible-always /deep/ ::-webkit-scrollbar {
+    display: none;
+}
+
+.list-tree li.list-nested-item.status-modified:not(.selected) > .list-item, .list-group li.list-nested-item.status-modified:not(.selected) > .list-item {
+    color: @main !important;
+}
+
+.list-tree li:not(.list-nested-item):not(.tabBlender).status-modified, .list-group li:not(.list-nested-item):not(.tabBlender).status-modified, .list-tree li.list-nested-item > .list-item.status-modified, .list-group li.list-nested-item > .list-item.status-modified {
+    color: #44c37e !important;
+}
+
+.list-tree li:not(.list-nested-item):not(.tabBlender), .list-group li:not(.list-nested-item):not(.tabBlender), .list-tree li.list-nested-item > .list-item, .list-group li.list-nested-item > .list-item {
+    color: rgba(171, 178, 191, 0.8);
+}
+
+.tree-view:focus li.directory.selected.status-modified > .list-item::after {
+    background: #de4949;
+}
+
+.tree-view:focus li.directory.selected.status-modified > .list-item {
+    color: #fff;
+}
+
+.tree-view:focus li:not(.list-nested-item).selected.status-modified::before, .tree-view:focus li.list-nested-item > .list-item.selected.status-modified::before {
+    background: #fff;
+}
+
+.grammar-status a, .grammar-status a:hover {
+    color: rgb(228, 33, 87);
+}
+
+* {
+    text-decoration: none !important;
+    outline: 0 !important;
+    -webkit-font-rendering: none !important;
+    -webkit-font-smoothing: subpixel-antialiased !important;
+    text-rendering: optimizeLegibility !important;
+    // letter-spacing: 0.1px;
+}
+
+atom-text-editor .string.quoted,
+atom-text-editor .string.regexp {
+    -webkit-font-feature-settings: "liga" off, "calt" off;
+}
+
+atom-text-editor .wrap-guide {
+    display: none !important;
+}
+
+.platformio-ide-terminal .xterm {
+    // background-color: inherit;
+    color: #9e9e9e;
+    font-weight: 500;
+
+    ::selection {
+        background-color: #000;
+    }
+}
+
+.tab-bar .tab .close-icon::before {
+    color: #e42157;
+}
+
+::selection {
+    background:#fff;
+}
