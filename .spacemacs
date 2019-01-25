@@ -58,6 +58,11 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      iedit
+                                      doom-themes
+                                      indent-guide
+                                      drag-stuff
+                                      pdf-tools
                                       magit
                                       paren-face
                                       treemacs
@@ -65,11 +70,12 @@ values."
                                       imenu-list
                                       linum-relative
                                       evil-surround
+                                      evil-commentary
                                       gruvbox-theme
                                       darktooth-theme
                                       kaolin-themes
                                       ranger
-                                      workgroups2
+                                      eyebrowse
                                       flycheck
                                       yasnippet-snippets
                                       spaceline
@@ -350,14 +356,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (spacemacs/toggle-visual-line-navigation)
 
   (savehist-mode -1)
-  (global-visual-line-mode t) ; for line breaks
+  (global-visual-line-mode t)
   (show-paren-mode 1)
 
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
   (setq mouse-avoidance-mode 'animate)
   (setq default-directory "c:/Users/Bruno/Documents/")
-  ;; (setq-default line-spacing 2)
   (setq js-indent-level 2)
 
   ;; Ligatures from the Fira Code font
@@ -489,14 +494,25 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (add-hook 'prog-mode-hook
             #'add-fira-code-symbol-keywords)
 
+  ;; lambda symbol for haskell
+  (defun pretty-lambdas-haskell ()
+    (font-lock-add-keywords
+     nil `((,(concat "\\(" (regexp-quote "\\") "\\)")
+            (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                      ,(make-char 'greek-iso8859-7 107))
+                      nil))))))
+
+  (add-hook 'haskell-mode-hook 'pretty-lambdas-haskell)
+
   (use-package linum-relative
     :ensure t
+    :hook (prog-mode . linum-relative-mode)
     :config
-    (setq linum-relative-current-symbol "")
-    (linum-relative-global-mode))
+    (setq linum-relative-current-symbol ""))
 
   (use-package ranger
     :ensure t
+    :defer t
     :bind (("M-m a r" . ranger))
     :config
     (ranger-override-dired-mode t))
@@ -505,32 +521,59 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :ensure t
     :bind (("M-m '" . eshell)))
 
-  (use-package workgroups2
+  (use-package iedit
+    :ensure t
+    :defer t
+    :bind (("M-m s e" . iedit-mode)))
+
+  (use-package eyebrowse
+    :ensure t
+    ;; :defer t ;; makes startup faster
+    :config
+    (eyebrowse-mode)
+    (eyebrowse-setup-opinionated-keys))
+
+  (use-package drag-stuff
     :ensure t
     :config
-    (workgroups-mode))
+    (drag-stuff-global-mode 1)
+    (drag-stuff-define-keys))
 
   (use-package evil-surround
     :ensure t
     :config
     (global-evil-surround-mode 1))
 
+  (use-package multiple-cursors
+    :ensure t
+    :config
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+
   (use-package magit
     :ensure t
-    :bind (("M-m g" . magit)
-           ("M-m g s" . magit-status)))
+    :defer t
+    :bind (("M-m g" . magit)))
 
   (use-package ivy
     :ensure t
-    :bind (("C-;" . avy-goto-char))
+    :bind (("C-:" . avy-goto-char)
+           ("C-;" . avy-goto-word-1))
     :config
-    (setq ivy-count-format "(%d/%d) "))
+    (setq ivy-count-format "(%d/%d) ")
+    (setq avy-background t))
 
   (use-package flycheck
     :ensure t
     ;; :defer t
     :config
     (global-flycheck-mode))
+
+  (use-package indent-guide
+    :ensure t
+    :config
+    (indent-guide-global-mode))
 
   (use-package electric
     :ensure t
@@ -582,28 +625,41 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :defer t
     :bind (("M-m t t" . treemacs))
     :config
-    (setq treemacs-no-png-images t))
+    (setq treemacs-no-png-images t
+          treemacs-width 25))
 
   (use-package treemacs-evil
     :after treemacs evil
     :ensure t)
 
+  (use-package pdf-tools
+    :ensure t
+    :defer t
+    :config
+    (pdf-tools-install))
+
   (use-package paren-face
     :ensure t
+    :hook (prog-mode . paren-face-mode)
     :config
-    (setq paren-face-regexp "[\]\[\(\)\{\}\;]")
-    (add-hook 'prog-mode-hook 'paren-face-mode))
+    (setq paren-face-regexp "[\]\[\(\)\{\}\;]"))
 
   (use-package yasnippet
     :ensure t
     :config
     (yas-global-mode 1)
     (setq yas-prompt-functions 'yas-ido-prompt)
-    (setq-default ac-sources (push 'ac-source-yasnippet ac-sources)))
+    (setq-default ac-sources (push 'ac-source-yasnippet ac-sources))
+    (yas-reload-all))
 
   (use-package yasnippet-snippets
     :after yasnippet
     :ensure t)
+
+  (use-package evil-commentary
+    :ensure t
+    :config
+    (evil-commentary-mode))
 
   (use-package spaceline
     :ensure t
@@ -612,7 +668,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
       (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
       (setq-default powerline-default-separator 'slant)
       (setq spaceline-separator-dir-left '(right . right))
-      (setq spaceline-separator-dir-right '(right . right)))
+      (setq spaceline-separator-dir-right '(right . right))
+      )
     :config
     (require 'spaceline-config)
     (spaceline-toggle-buffer-size-off)
@@ -630,6 +687,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package projectile
     :ensure t
+    :defer t
     :config
     (projectile-mode)
     (setq projectile-enable-caching t))
@@ -648,12 +706,38 @@ before packages are loaded. If you are unsure, you should try in setting them in
    (quote
     ("00cbb8c7ba4cc9127d40ba6881ecaccc7f8c81671e84b0ebd7d8ef3e6a0d33b9" "6f6a6d8f80e703dab1e5e562be81daa5ebb43ebf2efed6fa6f456c2ef90696c9" "ce8fd27c3f4a2094fb81db06755ee6c714dd0d576ee89955fecc5bac063aa9ca" "10fcd5e59feef1ce1596aa2fba2f4104fa14426476842636e7148285df00440a" "1c870ea7d5a8ce62f4cb668d78b6ce605c81931f261a0c88944c2f96cd0d7363" "c5919b7bf5ff4828562d53c9e3721ffe4ce76af14e646ed00d26904e36313d82" "484c43ae3338e36f460fb4df79062b5defc591337d5bcad8a2eb775bdb4200f9" "7a4d8221216651eddd23ce8b88b21b1ca0d157b7e8657ad8cc7119b3429adce1" "85968e61ff2c490f687a8159295efb06dd05764ec37a5aef2c59abbd485f0ee4" "2bbdbbfb6e467ce19eb9ec9992a88ffc29660c0fbd6039f4efd6cc5c828f0338" "7f89ec3c988c398b88f7304a75ed225eaac64efa8df3638c815acc563dfd3b55" default)))
  '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#858FA5")
+ '(jdee-db-active-breakpoint-face-colors (cons "#100e23" "#906cff"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#100e23" "#95ffa4"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#565575"))
  '(package-selected-packages
    (quote
-    (magit let-alist graphql with-editor paren-face telephone-line treemacs-projectile yasnippet-snippets treemacs-evil treemacs imenu-list neotree color-identifiers-mode erc-colorize auto-complete company haskell-mode racket-mode faceup rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest darktooth-theme rainbow-identifiers gotham-theme evil-surround kaolin-dark-theme memoize web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode kaolin-themes json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode powerline-evil spaceline powerline flycheck workgroups2 ranger gruvbox-theme autothemer dash linum-relative which-key wgrep use-package smex pcre2el macrostep ivy-hydra hydra helm-make helm helm-core popup flx exec-path-from-shell evil-visualstar evil-escape evil goto-chg undo-tree elisp-slime-nav diminish counsel-projectile projectile pkg-info epl counsel swiper ivy bind-map bind-key auto-compile packed async ace-window avy)))
+    ()))
  '(pdf-view-midnight-colors (quote ("#fdf4c1" . "#282828")))
  '(pos-tip-background-color "#36473A")
- '(pos-tip-foreground-color "#FFFFC8"))
+ '(pos-tip-foreground-color "#FFFFC8")
+ '(vc-annotate-background "#1b182c")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#95ffa4")
+    (cons 40 "#b8f7a6")
+    (cons 60 "#dbf0a8")
+    (cons 80 "#ffe9aa")
+    (cons 100 "#ffd799")
+    (cons 120 "#ffc488")
+    (cons 140 "#ffb378")
+    (cons 160 "#eda79b")
+    (cons 180 "#db9cbd")
+    (cons 200 "#c991e1")
+    (cons 220 "#db8bc0")
+    (cons 240 "#ed85a0")
+    (cons 260 "#ff8080")
+    (cons 280 "#d4757d")
+    (cons 300 "#aa6a7a")
+    (cons 320 "#805f77")
+    (cons 340 "#858FA5")
+    (cons 360 "#858FA5")))
+ '(vc-annotate-very-old-color nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
