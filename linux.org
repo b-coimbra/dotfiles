@@ -1,0 +1,117 @@
+
+* Permissions
+   
+** chmod (change mode)
+   
+   u = user (owner)
+   g = group
+   o = others
+   a = all
+   
+   + = add permission
+   - = remove permission
+   = = override permission
+   
+   0 - nothing
+   1 - execute
+   2 - write
+   3 - 1 + 2 (wx) write and execute
+   4 - read
+   5 - 4 + 1 (rx) read and execute
+   6 - 4 + 3 (rw) read and write
+   7 - 4 + 2 + 1 (rwx) read, write and execute
+
+chmod -R <specifications> <directory>    changing permissions of the contents of a directory recursively
+chmod og=+r                              add read permission for the owner and group
+chmod a +rwx file                        allow all user to read, write and execute
+
+
+** chown (Change Ownership)
+
+   chown user1 filename     - changing ownership of a file to user1
+
+** su (switch user)
+
+   su -   invokes a login shell, reseting most environment variables
+   su     normal shell
+   
+   sudo su   switch to root 
+
+* sudo (superuser do)
+
+sudo will run a specific command with root level of permission
+
+sudo apt-get install <package-name>  for instance
+
+can also be chained with commands like
+
+sudo !!   (last command)
+
+* Other commands
+  
+  !!            executes last command
+
+  less <file>   view the contents of a file with a pager 
+  
+  head <file>   first several lines of a file (pass -n <numer-of-lines> to see N number of lines)
+  tail <file>   last several lines of a file (pass -n <numer-of-lines> to see N number of lines)
+
+  uname         show informations about the system (-a flag shows ALL info)
+  
+  du (disk usage)  summarizes the disk usage of files
+    -s, --summarize
+    -h, --human-readable
+    
+    du -sh *  summarizes every file in the current directory
+    du -sh    summarizes everything into one size
+    
+  df (disk space of filesystem) pass -h to make it human-readable
+  
+  ps (process status)  just read --help or `man` lol
+  
+  killall    terminates a process
+  
+  which      tells where a program is in your computer (eg. which chrome)
+  
+  time       time the execution of any program (eg. time node script.js)
+  
+* File Compression
+  
+  -c --create         create a new archive
+  -x --extract        extract files from an archive
+  -t --list           list the contents of an archive
+  -f --file=ARCHIVE   use archive file
+  -v --verbose        list files being processed
+  
+  --exclude <path>   ignores subfolder
+
+
+  tar -cf ./folder-archive.tar ./my-folder
+  
+  tar -lf ./folder-archive.tar       lists the contents of the archive without extracting it
+  
+  tar -xvf ./folder-archive.tar      extracts the archive
+  
+  tar -cf archive.tar ./my-folder --exclude "my-folder/subfolder"  ignores subfolder inside my-folder
+  
+* RegEx Tools
+
+- grep (Globally search for a Regular Expression and Print)
+  for searching stuff in files, or any STDIN input (eg. 'ls' command)
+
+  EXAMPLE: ls | grep "\.exe$"
+
+- sed (stream editor)
+  for substitituing, deleting or filtering text on a stream
+
+  EXAMPLE: sed 's/regexp/replacement/g' file > output
+  
+  -r will extend the Regex portability (POSIX)
+
+- xargs (command args)
+  pass any command to it and it will execute it on a stream.
+
+  EXAMPLE:
+  
+  find | grep "\.exe$" | xargs ls -lh
+  
