@@ -1,6 +1,21 @@
+* Sha Bang
+
+  #! regular sha-bang at the top of a script, when the script is turned to executable, the system can
+     locate the appropriate interpreter for the specified script
+     
+  !! executes last command
+  
+  !* execute command with ALL the args passed to the last command
+
+  !^ executes command with the FIRST arg passed to the last command
+  
+  !$ executes command with the LAST arg passed to the last command
+  
+  !?keyword? execute a command from history for the first pattern match
+
+  !-N  execute command that was Nth position from the last in history
 
 * Permissions
-   
 ** chmod (change mode)
    
    u = user (owner)
@@ -25,7 +40,6 @@ chmod -R <specifications> <directory>    changing permissions of the contents of
 chmod og=+r                              add read permission for the owner and group
 chmod a +rwx file                        allow all user to read, write and execute
 
-
 ** chown (Change Ownership)
 
    chown user1 filename     - changing ownership of a file to user1
@@ -39,17 +53,20 @@ chmod a +rwx file                        allow all user to read, write and execu
 
 * sudo (superuser do)
 
-sudo will run a specific command with root level of permission
-
-sudo apt-get install <package-name>  for instance
-
-can also be chained with commands like
-
-sudo !!   (last command)
+  sudo will run a specific command with root level of permission
+  
+  sudo apt-get install <package-name>  for instance
+  
+  can also be chained with commands like
+  
+  sudo !!   (last command)
 
 * Other commands
   
-  !!            executes last command
+  cd -          go to the previous working directory
+  
+  ls *D         pathname expansion, returns all files starting with D
+  ls exe*       same as above
 
   less <file>   view the contents of a file with a pager 
   
@@ -71,10 +88,27 @@ sudo !!   (last command)
   
   killall    terminates a process
   
-  which      tells where a program is in your computer (eg. which chrome)
+  which      searches for executables specified by the environment variable PATH
   
   time       time the execution of any program (eg. time node script.js)
   
+  apropos    find a command that I'm unaware of (eg. apropos "list dir"),
+             use in conjuntion with (whatis) command
+             
+  whereis    searches for executables, source files and manual pages
+  
+  diff       compares files, and lists their difference
+
+  find       find files in directory (eg. find -name README.md)
+  
+* Fix typos
+  
+  Instead of retyping a long list of arguments of a mispelled command,
+  we can correct whatever typo we made with (^typo^correct)
+  
+  $ dc /tmp
+  $ ^dc^cd
+
 * File Compression
   
   -c --create         create a new archive
@@ -83,8 +117,10 @@ sudo !!   (last command)
   -f --file=ARCHIVE   use archive file
   -v --verbose        list files being processed
   
+  -z compress the archive with gzip  (gzip is faster, but compresses less)
+  -j compress the archive with bzip2 (bzip2 is slower, but compresses more)
+  
   --exclude <path>   ignores subfolder
-
 
   tar -cf ./folder-archive.tar ./my-folder
   
@@ -94,24 +130,102 @@ sudo !!   (last command)
   
   tar -cf archive.tar ./my-folder --exclude "my-folder/subfolder"  ignores subfolder inside my-folder
   
+  tar -czvf archive.tar.gz
+  
+  tar -cjvf archive.tar.bz2
+  
+  gunzip filename     un-compresses files compressed by gzip
+  gzcat  filename     look at a gzipped file without having to gunzip it
+  gzip   filename     compresses a file to gzip format
+  bzip2  filename     compresses a file to bzip2 format
+  
+* Comma and Braces Operators
+  
+  we can use comma and braces to:
+  - rename and backup operations
+  - pattern matching
+    
+  to backup settings.conf to settings.conf.bak:
+
+    cp settings.conf{,.bak} 
+    
+  to revert the file from settings.conf.bak to settings.conf:
+  
+    mv settings.conf{.bak,}
+    
+  other uses:
+
+  echo foo{1,2,3}.txt    outputs foo1.txt, foo2.txt, foo3.txt
+  
+  echo file-{a..b}.txt   outputs file-a.txt file-b.txt file-c.txt file-d.txt
+  
+  mv program.{c,exe} bin/
+    
+* Chaining Operators
+  - & (Ampersand Operator)
+
+    run one or more commands in the background,
+
+    EXAMPLE: ping www.google.com &
+             apt-get update & apt-get upgrade &
+    
+  - ; (Semi-colon operator)
+
+    run several commands at once sequentially, disregarding the exit status of the preceding command
+
+    EXAMPLE: apt-get update ; apt-get upgrade ; mkdir test
+
+  - && (AND operator)
+
+    executes a command IF the exit status of the preceding command is 0
+
+    EXAMPLE: ping www.google.com && links www.google.com    (checking the connection before using links command)
+    
+  - || (OR operator)
+    
+    much like an 'else' statement, allows to execute the second command only if the execution
+    of the first fails (i.e., the exit status is 1)
+    
+    EXAMPLE: apt-get update || links www.google.com
+
+  - ! (NOT operator)
+    
+    much like an 'except' statement, this command will execute all except the condition provided
+    
+    EXAMPLE: rm -r !(*.html)      removes all files in a folder except .html files
+    
+  - | (PIPE operator)
+
+    passes the output of the first command to the second one
+
+    EXAMPLE: ls -l | less
+    
+  - {} (Command Combination operator)
+
+    combine two or more commands
+
+    [ -d Folder] || { echo creating Folder; mkdir Folder; } && echo Folder exists.
+
 * RegEx Tools
 
 - grep (Globally search for a Regular Expression and Print)
-  for searching stuff in files, or any STDIN input (eg. 'ls' command)
-
+  for searching stuff in files, or any STDOUT (eg. 'ls' command)
+  
   EXAMPLE: ls | grep "\.exe$"
-
+  
 - sed (stream editor)
   for substitituing, deleting or filtering text on a stream
-
+  
   EXAMPLE: sed 's/regexp/replacement/g' file > output
   
   -r will extend the Regex portability (POSIX)
-
+  
 - xargs (command args)
   pass any command to it and it will execute it on a stream.
-
-  EXAMPLE:
   
-  find | grep "\.exe$" | xargs ls -lh
+  EXAMPLE: find | grep "\.exe$" | xargs ls -lh
+  
+* Bash
+
+  [ -d Folder ]    checks if a folder exists
   
