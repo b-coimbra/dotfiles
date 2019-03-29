@@ -1,20 +1,25 @@
 ysw" - add surrounding word with "
+
 cst< - change surround tag
 
 <VISUAL> : sort - sort selected lines
 
 z t - current line goes to top
+
 z b - current line goes to bottom
 
 ^e - scroll but preserve cursor position
+
 ^y - scroll top but preserve cursor position
 
 g* - searches current word <unlisted>
 
 ^z - pause vim and play in the terminal
+
 fg - return to vim
 
 > i { - one indent inside curly brackets (or > i B)
+
 = i { - indent inside curly brackets
 
 ^v I - enter visual block then add a prefix '#'
@@ -39,13 +44,17 @@ ZQ - save without quitting
 :x - same as :wq
 
 [) - next close parens
+
 [} - next close curly braces
 
 ''  - move to last cursor position
+
 '.  - jump to last modification
+
 `.  - jump to exact last modification
 
 <C-O>  - retrace (backwards) your movements in a file
+
 <C-I>  - retrace (forward)   your movements in a file
 
 * RegEx
