@@ -39,6 +39,7 @@ g J - join without whitespace
 ~ - change case
 
 ZZ - save and quit
+
 ZQ - save without quitting
 
 :x - same as :wq
@@ -60,11 +61,15 @@ ZQ - save without quitting
 * RegEx
 
 ^   negates a character class (eg: /[^g-f]/ which means NOT between g and f)
+
 \W  [^\w]
+
 \D  [^\d]
+
 \S  [^\s]
 
 (?:ABC)  won't capture the group
+
 AB(?=C)  lookahead, will match when AB is followed by C, but C won't be matched
 
 * Spacemacs
