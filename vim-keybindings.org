@@ -31,10 +31,22 @@ g J - join without whitespace
 
 "0 - the rigister '0' will always have the content of the latest yank
 
-'' - move to last cursor position
+~ - change case
+
+ZZ - save and quit
+ZQ - save without quitting
+
+:x - same as :wq
 
 [) - next close parens
 [} - next close curly braces
+
+''  - move to last cursor position
+'.  - jump to last modification
+`.  - jump to exact last modification
+
+<C-O>  - retrace (backwards) your movements in a file
+<C-I>  - retrace (forward)   your movements in a file
 
 * RegEx
 
@@ -45,13 +57,6 @@ g J - join without whitespace
 
 (?:ABC)  won't capture the group
 AB(?=C)  lookahead, will match when AB is followed by C, but C won't be matched
-
-~ - change case
-
-ZZ - save and quit
-ZQ - save without quitting
-
-:x - same as :wq
 
 * Spacemacs
 
