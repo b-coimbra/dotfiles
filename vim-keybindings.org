@@ -1,6 +1,8 @@
 ysw" - add surrounding word with "
 cst< - change surround tag
 
+das - delete around sentence
+
 <VISUAL> : sort - sort selected lines
 
 z t - current line goes to top
@@ -29,12 +31,19 @@ gv - resume the previous visual mode selection
 
 g J - join without whitespace
 
-"0 - the rigister '0' will always have the content of the latest yank
+"0 - the register '0' will always have the content of the latest yank
 
 '' - move to last cursor position
 
 [) - next close parens
 [} - next close curly braces
+
+~ - change case
+
+ZZ - save and quit
+ZQ - save without quitting
+
+:x - same as :wq
 
 * RegEx
 
@@ -46,13 +55,13 @@ g J - join without whitespace
 (?:ABC)  won't capture the group
 AB(?=C)  lookahead, will match when AB is followed by C, but C won't be matched
 
-~ - change case
-
-ZZ - save and quit
-ZQ - save without quitting
-
-:x - same as :wq
-
 * Spacemacs
 
 , s f - skewer eval defun
+
+g r u - undo all multiple-cursors
+
+<VISUAL> C-n  - next mc match 
+<VISUAL> C-p  - previous mc match
+
+<SPC> s e     - iedit mode

@@ -36,9 +36,9 @@
    6 - 4 + 3 (rw) read and write
    7 - 4 + 2 + 1 (rwx) read, write and execute
 
-chmod -R <specifications> <directory>    changing permissions of the contents of a directory recursively
-chmod og=+r                              add read permission for the owner and group
-chmod a +rwx file                        allow all user to read, write and execute
+   chmod -R <specifications> <directory>    changing permissions of the contents of a directory recursively
+   chmod og=+r                              add read permission for the owner and group
+   chmod a +rwx file                        allow all user to read, write and execute
 
 ** chown (Change Ownership)
 
@@ -65,8 +65,8 @@ chmod a +rwx file                        allow all user to read, write and execu
   
   cd -          go to the previous working directory
   
-  ls *D         pathname expansion, returns all files starting with D
-  ls exe*       same as above
+  ls \*D         pathname expansion, returns all files starting with D
+  ls exe\*       same as above
 
   less <file>   view the contents of a file with a pager 
   

@@ -178,7 +178,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Fantasque Sans Mono"
-                               :size 15
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -265,7 +265,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -312,7 +312,7 @@ values."
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc?
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis t
    ;; Select a scope to highlight delimiters. Possible values are `any',
@@ -358,11 +358,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (savehist-mode -1)
   (global-visual-line-mode t)
   (show-paren-mode 1)
-
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
   (setq mouse-avoidance-mode 'animate)
-  (setq default-directory "c:/Users/Bruno/Documents/")
   (setq js-indent-level 2)
 
   ;; Ligatures from the Fira Code font
@@ -712,7 +710,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#565575"))
  '(package-selected-packages
    (quote
-    ()))
+    (exwm yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil treemacs ht pfuture f tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode faceup pug-mode powerline-evil powerline pdf-tools tablist paren-face magit transient git-commit with-editor livid-mode skewer-mode simple-httpd linum-relative kaolin-themes json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors s js2-mode js-doc ivy-hydra hydra indent-guide imenu-list iedit helm-make haskell-mode haml-mode gruvbox-theme flycheck eyebrowse evil-surround evil-escape evil-commentary evil goto-chg undo-tree emmet-mode drag-stuff doom-themes all-the-icons memoize diminish darktooth-theme autothemer dash counsel-projectile projectile pkg-info epl counsel swiper ivy coffee-mode bind-map bind-key auto-complete popup auto-compile packed async ace-window avy)))
  '(pdf-view-midnight-colors (quote ("#fdf4c1" . "#282828")))
  '(pos-tip-background-color "#36473A")
  '(pos-tip-foreground-color "#FFFFC8")
