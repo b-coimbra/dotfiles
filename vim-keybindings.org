@@ -5,22 +5,22 @@
 |-------------------+------------------------------------------------------------------|
 | ysw"              | add surroinding word with "                                      |
 | cst<              | change surround tag                                              |
-| <VISUAL> : sort   | sort selected lines                                              |
-| z t               | current line goes to top                                         |
-| z b               | current line goes to bottom                                      |
+| <VISUAL> :sort    | sort selected lines                                              |
+| zt                | current line goes to top                                         |
+| zb                | current line goes to bottom                                      |
 | ^e                | scroll but preserve cursor position                              |
 | ^y                | scroll top but preserve cursor position                          |
 | g*                | searches current word <unlisted>                                 |
 | ^z                | pause vim and play in the terminal                               |
 | fg                | return to vim                                                    |
-| > i {             | one indent inside curly brackets (or > i B)                      |
-| = i {             | indent inside curly brackets                                     |
-| ^v I              | enter visual block then add a prefix '#'                         |
+| >i{               | one indent inside curly brackets (or > i B)                      |
+| \=i{              | indent inside curly brackets                                     |
+| ^vI               | enter visual block then add a prefix '#'                         |
 | %                 | matches equal pairs                                              |
 | @@                | execute last macro                                               |
 | :reg              | lists all registers (macros included)                            |
 | gv                | resume the previous visual mode selection                        |
-| g J               | join without whitespace                                          |
+| gJ                | join without whitespace                                          |
 | "0                | the rigister '0' will always have the content of the latest yank |
 | ~                 | change case                                                      |
 | ZZ                | save and quit                                                    |
@@ -31,24 +31,28 @@
 | ''                | move to last cursor position                                     |
 | '.                | jump to last modification                                        |
 | `.                | jump to exact last modification                                  |
+| ".                | last inserted text                                               |
+| ":                | last executed command                                            |
+| @:                | execute last command                                             |
 | <C-O>             | retrace (backwards) your movements in a file                     |
 | <C-I>             | retrace (forward)   your movements in a file                     |
 | <INSERT> Ctrl-r = | execute an expression and paste it into the buffer               |
+| :marks            | list of marks                                                    |
+| ea                | append at the end of a word (better than 'eli')                  |
 
 * RegEx
 
-^   negates a character class (eg: /[^g-f]/ which means NOT between g and f)
-
-\W  [^\w]
-
-\D  [^\d]
-
-\S  [^\s]
-
-(?:ABC)  won't capture the group
-
-AB(?=C)  lookahead, will match when AB is followed by C, but C won't be matched
+| Expression | Description                                                            |
+|------------+------------------------------------------------------------------------|
+| \^         | negates a character class (eg: /[^g-f]/ -- NOT between g and f)        |
+| \W         | [^\w]                                                                  |
+| \D         | [^\d]                                                                  |
+| \S         | [^\s]                                                                  |
+| (?:ABC)    | won't capture the group                                                |
+| AB(?=C)    | lookahead, will match when AB is followed by C, but C won't be matched |
 
 * Spacemacs
 
-, s f - skewer eval defun
+| Command | Description       |
+|---------+-------------------|
+| , s f   | skewer eval defun |
