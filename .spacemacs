@@ -32,6 +32,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      ;; ruby
+     source-control
      html
      ;; html
      ;; ----------------------------------------------------------------
@@ -50,21 +51,22 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
-     ;; version-control
+     syntax-checking
+     version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      company
+                                      highlight-indent-guides
                                       evil-mc
                                       dart-mode
                                       iedit
                                       doom-themes
-                                      indent-guide
+                                      ;; indent-guide
                                       drag-stuff
-                                      pdf-tools
                                       magit
                                       paren-face
                                       treemacs
@@ -74,20 +76,20 @@ values."
                                       evil-surround
                                       evil-commentary
                                       gruvbox-theme
-                                      darktooth-theme
                                       kaolin-themes
                                       ranger
                                       eyebrowse
                                       flycheck
-                                      yasnippet-snippets
+                                      ;; yasnippet-snippets
                                       spaceline
                                       powerline
                                       powerline-evil
-                                      projectile
+                                      ;; projectile
                                       winum
                                       racket-mode
                                       haskell-mode
                                       auto-complete
+                                      ac-ispell
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -352,7 +354,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun dotspacemacs/user-config ()
   (use-package kaolin-themes
     :init
-    (spacemacs/load-theme 'gruvbox-custom))
+    (spacemacs/load-theme 'kaolin-dark))
 
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
@@ -513,7 +515,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (use-package ranger
     :ensure t
     :defer t
-    :bind (("M-m a r" . ranger))
+    :bind (("M-m a r" . ranger)
+           ("M-m a d" . deer))
     :config
     (ranger-override-dired-mode t))
 
@@ -528,7 +531,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package eyebrowse
     :ensure t
-    ;; :defer t ;; makes startup faster
+    ;;:defer t ;; makes startup faster
     :config
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
@@ -544,13 +547,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (global-evil-surround-mode 1))
 
-  ;; (use-package multiple-cursors
-  ;;   :ensure t
-  ;;   :config
-  ;;   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  ;;   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  ;;   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-
   (use-package evil-mc
     :ensure t
     :config
@@ -559,26 +555,30 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (use-package magit
     :ensure t
     :defer t
-    :bind (("M-m g" . magit)))
+    :bind (("M-m g s" . magit-status)))
 
   (use-package ivy
     :ensure t
     :bind (("C-:" . avy-goto-char)
            ("C-;" . avy-goto-word-1))
     :config
-    (setq ivy-count-format "(%d/%d) ")
-    (setq avy-background t))
+    (setq ivy-count-format "(%d/%d) "
+          avy-background t))
 
   (use-package flycheck
     :ensure t
-    ;; :defer t
-    :config
-    (global-flycheck-mode))
+    :hook (prog-mode . flycheck-mode))
 
-  (use-package indent-guide
+  (use-package zone
     :ensure t
     :config
-    (indent-guide-global-mode))
+    (setq zone-when-idle 30))
+
+  (use-package highlight-indent-guides
+    :ensure t
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :config
+    (setq highlight-indent-guides-method 'character))
 
   (use-package electric
     :ensure t
@@ -590,7 +590,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (setq winum-keymap
           (let ((map (make-sparse-keymap)))
-            (define-key evil-normal-state-map (kbd "C-`") 'winum-select-window-by-number)
+            (define-key evil-normal-state-map (kbd "C-`")   'winum-select-window-by-number)
             (define-key evil-normal-state-map (kbd "SPC 0") 'winum-select-window-0-or-10)
             (define-key evil-normal-state-map (kbd "SPC 1") 'winum-select-window-1)
             (define-key evil-normal-state-map (kbd "SPC 2") 'winum-select-window-2)
@@ -615,15 +615,28 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :defer t
     :bind (("C-\\" . imenu-list-smart-toggle))
     :config
-    (setq imenu-list-focus-after-activation t)
-    (setq imenu-list-auto-resize t))
+    (setq imenu-list-focus-after-activation t
+          imenu-list-auto-resize t))
 
-  (use-package auto-complete
+  ;; (use-package auto-complete
+  ;;   :ensure t
+  ;;   :config
+  ;;   (ac-config-default)
+  ;;   (global-auto-complete-mode)
+  ;;   (ac-flyspell-workaround)
+  ;;   (add-to-list 'ac-sources 'ac-source-yasnippet)
+  ;;   (setq ac-delay 0
+  ;;         ac-auto-show-menu 0.5
+  ;;         ac-auto-start t
+  ;;         ac-show-menu-immediately-on-auto-complete t))
+
+  (use-package company
     :ensure t
+    :init (global-company-mode)
     :config
-    (global-auto-complete-mode)
-    (ac-config-default)
-    (add-to-list 'ac-sources 'ac-source-yasnippet))
+    (setq company-dabbrev-downcase 0
+          company-idle-delay 0
+          company-minimum-prefix-length 1))
 
   (use-package treemacs
     :ensure t
@@ -637,29 +650,23 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after treemacs evil
     :ensure t)
 
-  (use-package pdf-tools
-    :ensure t
-    :defer t
-    :config
-    (pdf-loader-install))
-
   (use-package paren-face
     :ensure t
     :hook (prog-mode . paren-face-mode)
     :config
     (setq paren-face-regexp "[\]\[\(\)\{\}\;]"))
 
-  (use-package yasnippet
-    :ensure t
-    :config
-    (yas-global-mode 1)
-    (setq yas-prompt-functions 'yas-ido-prompt)
-    (setq-default ac-sources (push 'ac-source-yasnippet ac-sources))
-    (yas-reload-all))
+  ;; (use-package yasnippet
+  ;;   :ensure t
+  ;;   :config
+  ;;   (yas-global-mode 1)
+  ;;   (setq yas-prompt-functions 'yas-ido-prompt)
+  ;;   (setq-default ac-sources (push 'ac-source-yasnippet ac-sources))
+  ;;   (yas-reload-all))
 
-  (use-package yasnippet-snippets
-    :after yasnippet
-    :ensure t)
+  ;; (use-package yasnippet-snippets
+  ;;   :after yasnippet
+  ;;   :ensure t)
 
   (use-package evil-commentary
     :ensure t
@@ -688,18 +695,30 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq evil-normal-state-cursor "#8ed030")
     (powerline-reset))
 
-  (use-package projectile
-    :ensure t
-    :defer t
-    :config
-    (projectile-mode)
-    (setq projectile-enable-caching t))
+  ;; (use-package projectile
+  ;;   :ensure t
+  ;;   :defer t
+  ;;   :config
+  ;;   (projectile-mode)
+  ;;   (setq projectile-enable-caching t))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
- )
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
+ '(custom-safe-themes
+   (quote
+    ("ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(package-selected-packages
+   (quote
+    ())))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
