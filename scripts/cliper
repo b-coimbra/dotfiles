@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+filename = ARGV[0] || abort('[!] Please specify an image.')
+extname  = File.extname(filename)
+format   = extname.tr(?., '').to_sym[/png/] || 'jpeg'
+image    = filename
+
+if format == 'jpeg'
+  image  = filename.gsub(extname, '.png')
+  format = 'png'
+
+  system "convert #{filename} #{image}"
+  at_exit { `rm #{image}` }
+end
+
+system "xclip -selection clipboard -t image/#{format} -i #{image}"

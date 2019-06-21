@@ -4,7 +4,7 @@
 
 require 'eat'
 
-abort "Usage: yt.rb <search> <max>" if ARGV[0].nil?
+abort "Usage: #$0 <search> <max>" if ARGV[0].nil?
 
 class String
   { :blue           => 34,

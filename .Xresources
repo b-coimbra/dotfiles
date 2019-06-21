@@ -6,13 +6,13 @@
 URxvt.depth:                32
 URxvt.geometry:             90x30
 URxvt.loginShell:           true
-URxvt.internalBorder:       10
+URxvt.internalBorder:       15
 URxvt.lineSpace:            0
 
 URxvt.color4: #00DDFF
 
 ! transparency - true or false (default)
-URxvt*transparent: true
+URxvt*transparent: false
 
 ! tint with any color; i.e., blue, red, tomato4, olivedrab2, etc.
 !   some nice listings are at:

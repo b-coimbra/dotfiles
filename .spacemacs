@@ -59,13 +59,13 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      typescript-mode
                                       company
                                       highlight-indent-guides
                                       evil-mc
                                       dart-mode
                                       iedit
                                       doom-themes
-                                      ;; indent-guide
                                       drag-stuff
                                       magit
                                       paren-face
@@ -352,10 +352,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-  (use-package kaolin-themes
-    :init
-    (spacemacs/load-theme 'kaolin-dark))
-
+  (spacemacs/load-theme 'doom-tomorrow-night)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -366,11 +363,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (setq mouse-avoidance-mode 'animate)
   (setq js-indent-level 2)
+  (setq auto-window-vscroll nil)
+  (setq-default evil-escape-key-sequence "jk")
 
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
 
-  (defconst fira-code-font-lock-keywords-alist
+ (defconst fira-code-font-lock-keywords-alist
     (mapcar (lambda (regex-char-pair)
               `(,(car regex-char-pair)
                 (0 (prog1 ()
@@ -718,7 +717,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    ())))
+    (key-chord nlinum-relative nlinum typescript-mode moe-theme gotham-theme cyberpunk-theme cyberpunk-2019-theme company yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face magit livid-mode linum-relative kaolin-themes json-mode js2-refactor js-doc ivy-hydra imenu-list iedit highlight-indent-guides helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode drag-stuff doom-themes diminish diff-hl dart-mode counsel-projectile coffee-mode bind-map auto-compile ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
