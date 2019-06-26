@@ -1,7 +1,8 @@
 ;; -*- mode: emacs-lisp -*-
+;;; .spacemacs --- Initialization file for Spacemacs
+;;; Commentary:
 ;; This file is loaded by Spacemacs at startup.
-;; It must be stored in your home directory.
-
+;;; Code:
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -32,7 +33,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      ;; ruby
-     source-control
+     nlinum
      html
      ;; html
      ;; ----------------------------------------------------------------
@@ -59,20 +60,18 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      tide
                                       typescript-mode
                                       company
-                                      highlight-indent-guides
                                       evil-mc
                                       dart-mode
                                       iedit
                                       doom-themes
-                                      drag-stuff
                                       magit
+                                      evil-magit
                                       paren-face
                                       treemacs
                                       treemacs-evil
-                                      imenu-list
-                                      linum-relative
                                       evil-surround
                                       evil-commentary
                                       gruvbox-theme
@@ -80,7 +79,8 @@ values."
                                       ranger
                                       eyebrowse
                                       flycheck
-                                      ;; yasnippet-snippets
+                                      yasnippet
+                                      yasnippet-snippets
                                       spaceline
                                       powerline
                                       powerline-evil
@@ -88,8 +88,6 @@ values."
                                       winum
                                       racket-mode
                                       haskell-mode
-                                      auto-complete
-                                      ac-ispell
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -308,7 +306,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers 'relative
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -352,12 +350,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-  (spacemacs/load-theme 'doom-tomorrow-night)
+  "My dotspacemacs."
+  ;; (spacemacs/load-theme 'doom-tomorrow-night)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
   (savehist-mode -1)
-  (global-visual-line-mode t)
+  (visual-line-mode -1)
   (show-paren-mode 1)
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
@@ -424,7 +423,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
               ("\\(/=\\)"                    #Xe12c)
               ("\\(/==\\)"                   #Xe12d)
               ("\\(/>\\)"                    #Xe12e)
-              ;; ("\\(//\\)"                    #Xe12f)
+              ("\\(//\\)"                    #Xe12f)
               ("\\(///\\)"                   #Xe130)
               ("\\(&&\\)"                    #Xe131)
               ("\\(||\\)"                    #Xe132)
@@ -436,7 +435,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
               ("\\(\\+\\+\\)"                #Xe138)
               ("\\(\\+\\+\\+\\)"             #Xe139)
               ("\\(\\+>\\)"                  #Xe13a)
-              ;; ("\\(=:=\\)"                   #Xe13b)
+              ("\\(=:=\\)"                   #Xe13b)
               ("[^!/]\\(==\\)[^>]"           #Xe13c)
               ("\\(===\\)"                   #Xe13d)
               ("\\(==>\\)"                   #Xe13e)
@@ -505,11 +504,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (add-hook 'haskell-mode-hook 'pretty-lambdas-haskell)
 
-  (use-package linum-relative
-    :ensure t
-    :hook (prog-mode . linum-relative-mode)
+  (use-package kaolin-themes
     :config
-    (setq linum-relative-current-symbol ""))
+    (load-theme 'kaolin-mono-dark)
+    (kaolin-treemacs-theme)
+    (setq kaolin-themes-bold t
+          kaolin-themes-italic t
+          kaolin-themes-underline t
+          kaolin-themes-distinct-company-scrollbar t))
 
   (use-package ranger
     :ensure t
@@ -521,25 +523,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package eshell
     :ensure t
-    :bind (("M-m '" . eshell)))
+    :bind ("M-m '" . eshell))
 
   (use-package iedit
     :ensure t
     :defer t
-    :bind (("M-m s e" . iedit-mode)))
+    :bind ("M-m s e" . iedit-mode))
 
   (use-package eyebrowse
     :ensure t
-    ;;:defer t ;; makes startup faster
     :config
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
-
-  (use-package drag-stuff
-    :ensure t
-    :config
-    (drag-stuff-global-mode 1)
-    (drag-stuff-define-keys))
 
   (use-package evil-surround
     :ensure t
@@ -551,10 +546,31 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (global-evil-mc-mode 1))
 
+  (use-package tide
+    :ensure t
+    :hook (before-save-hook . tide-format-before-save) ; format code before saving
+    :bind (("M-m t e" . tide-project-errors)     ; shows all project errors
+           ("M-m t r" . tide-references)         ; lists all references to the symbol at point in buffer
+           ("M-m t s" . tide-rename-symbol)      ; rename all ocurrences of the symbol at point
+           ("M-m t f" . tide-fix)                ; apply code fix for the error at point
+           ("M-m t R" . tide-rename-file)        ; rename current file and all it's references in other files
+           ("M-m t j" . tide-jump-to-definition) ; jumps to definition
+           ("M-m t b" . tide-jump-back))         ; jumps back after going to definition
+    :config
+    (tide-setup)
+    (eldoc-mode 1)
+    (tide-hl-identifier-mode 1))
+
   (use-package magit
     :ensure t
     :defer t
     :bind (("M-m g s" . magit-status)))
+
+  (use-package evil-magit
+    :ensure t
+    :after magit
+    :config
+    (evil-magit-init))
 
   (use-package ivy
     :ensure t
@@ -572,12 +588,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :ensure t
     :config
     (setq zone-when-idle 30))
-
-  (use-package highlight-indent-guides
-    :ensure t
-    :hook (prog-mode . highlight-indent-guides-mode)
-    :config
-    (setq highlight-indent-guides-method 'character))
 
   (use-package electric
     :ensure t
@@ -609,33 +619,19 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (setq org-display-inline-images t))
 
-  (use-package imenu-list
-    :ensure t
-    :defer t
-    :bind (("C-\\" . imenu-list-smart-toggle))
-    :config
-    (setq imenu-list-focus-after-activation t
-          imenu-list-auto-resize t))
-
-  ;; (use-package auto-complete
-  ;;   :ensure t
-  ;;   :config
-  ;;   (ac-config-default)
-  ;;   (global-auto-complete-mode)
-  ;;   (ac-flyspell-workaround)
-  ;;   (add-to-list 'ac-sources 'ac-source-yasnippet)
-  ;;   (setq ac-delay 0
-  ;;         ac-auto-show-menu 0.5
-  ;;         ac-auto-start t
-  ;;         ac-show-menu-immediately-on-auto-complete t))
-
   (use-package company
     :ensure t
     :init (global-company-mode)
     :config
+    (add-to-list 'company-backends
+                 '(company-yasnippet
+                   company-capf
+                   company-dabbrev))
     (setq company-dabbrev-downcase 0
-          company-idle-delay 0
-          company-minimum-prefix-length 1))
+          company-echo-delay 0
+          company-idle-delay 0.1
+          company-minimum-prefix-length 1
+          company-alignip-align-annotations t))
 
   (use-package treemacs
     :ensure t
@@ -649,23 +645,27 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after treemacs evil
     :ensure t)
 
+  (use-package git-gutter-fringe+
+    :config
+    (git-gutter-fr+-minimal)
+    (setq git-gutter-fr+-side 'left-fringe))
+
   (use-package paren-face
     :ensure t
     :hook (prog-mode . paren-face-mode)
     :config
     (setq paren-face-regexp "[\]\[\(\)\{\}\;]"))
 
-  ;; (use-package yasnippet
-  ;;   :ensure t
-  ;;   :config
-  ;;   (yas-global-mode 1)
-  ;;   (setq yas-prompt-functions 'yas-ido-prompt)
-  ;;   (setq-default ac-sources (push 'ac-source-yasnippet ac-sources))
-  ;;   (yas-reload-all))
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode 1)
+    (setq yas-prompt-functions 'yas-ido-prompt)
+    (yas-reload-all))
 
-  ;; (use-package yasnippet-snippets
-  ;;   :after yasnippet
-  ;;   :ensure t)
+  (use-package yasnippet-snippets
+    :after yasnippet
+    :ensure t)
 
   (use-package evil-commentary
     :ensure t
@@ -690,16 +690,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
           spaceline-window-number-p t
           spaceline-buffer-id-p t
           spaceline-buffer-size-p t)
-
-    (setq evil-normal-state-cursor "#8ed030")
     (powerline-reset))
 
-  ;; (use-package projectile
-  ;;   :ensure t
-  ;;   :defer t
-  ;;   :config
-  ;;   (projectile-mode)
-  ;;   (setq projectile-enable-caching t))
+  (use-package projectile
+    :ensure t
+    :defer t
+    :config
+    (projectile-mode)
+    (setq projectile-enable-caching t))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -713,14 +711,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (key-chord nlinum-relative nlinum typescript-mode moe-theme gotham-theme cyberpunk-theme cyberpunk-2019-theme company yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face magit livid-mode linum-relative kaolin-themes json-mode js2-refactor js-doc ivy-hydra imenu-list iedit highlight-indent-guides helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode drag-stuff doom-themes diminish diff-hl dart-mode counsel-projectile coffee-mode bind-map auto-compile ac-ispell))))
+    (evil-magit transient git-gutter pos-tip tide imenu-list yasnippet-snippets winum which-key web-mode web-beautify use-package typescript-mode treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative magit livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-hydra iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+;;; .spacemacs ends here

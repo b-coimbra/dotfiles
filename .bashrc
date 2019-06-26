@@ -11,12 +11,13 @@ PS1='\n\e[1;34m┌──────┄┄\e[0m\e[31m \e[1m\W\e[0m\e[0m\n\e[1;34
 alias c='clear'
 alias q='exit'
 alias r='ranger'
+alias v='vim'
 alias ls='ls --color=auto'
 alias fzf="fzf --preview 'cat {}'"
 alias empty-trash="rm -r ~/.trash/*"
 
 # keyboard layout
-setxkbmap -model abnt2 -layout br -variant abnt2
+# setxkbmap -model abnt2 -layout br -variant abnt2
 
 # editing style
 set -o emacs
