@@ -84,7 +84,7 @@ values."
                                       spaceline
                                       powerline
                                       powerline-evil
-                                      ;; projectile
+                                      projectile
                                       winum
                                       racket-mode
                                       haskell-mode
@@ -312,7 +312,7 @@ values."
    dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc?
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
@@ -715,7 +715,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (evil-magit transient git-gutter pos-tip tide imenu-list yasnippet-snippets winum which-key web-mode web-beautify use-package typescript-mode treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative magit livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-hydra iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (treemacs ht pfuture f lv faceup powerline autothemer all-the-icons memoize evil-magit transient git-gutter pos-tip tide imenu-list yasnippet-snippets winum which-key web-mode web-beautify use-package typescript-mode treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative magit livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-hydra iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
