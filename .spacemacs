@@ -93,6 +93,7 @@ values."
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
+                                    winner
                                     tern
                                     wgrep
                                     smex
@@ -100,6 +101,7 @@ values."
                                     macrostep
                                     flyspell
                                     hydra
+                                    ivy-hydra
                                     flx
                                     evil-visualstar
                                     goto-chg
@@ -355,15 +357,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
-  (savehist-mode -1)
-  (visual-line-mode -1)
-  (show-paren-mode 1)
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
-
-  (setq mouse-avoidance-mode 'animate)
-  (setq js-indent-level 2)
-  (setq auto-window-vscroll nil)
-  (setq-default evil-escape-key-sequence "jk")
+  (setq-default auto-window-vscroll nil
+                js-indent-level 2)
 
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
@@ -502,7 +497,28 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                       ,(make-char 'greek-iso8859-7 107))
                       nil))))))
 
-  (add-hook 'haskell-mode-hook 'pretty-lambdas-haskell)
+  (use-package haskell-mode
+    :ensure t
+    :hook (haskell-mode . pretty-lambdas-haskell))
+
+  (use-package hideshow
+    :hook (prog-mode . hs-minor-mode))
+
+  (use-package savehist
+    :init
+    (savehist-mode -1))
+
+  (use-package simple
+    :init
+    (visual-line-mode -1))
+
+  (use-package paren
+    :init
+    (show-paren-mode 1))
+
+  (use-package loaddefs
+    :init
+    (setq mouse-avoidance-mode 'animate))
 
   (use-package kaolin-themes
     :config
@@ -536,13 +552,31 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
 
+  (use-package magit
+    :ensure t
+    :defer t
+    :bind (("M-m g s" . magit-status)))
+
+  (use-package evil
+    :ensure t
+    :init
+    (setq-default evil-escape-key-sequence "jk"))
+
+  (use-package evil-magit
+    :ensure t
+    :after evil magit
+    :config
+    (evil-magit-init))
+
   (use-package evil-surround
     :ensure t
+    :after evil
     :config
     (global-evil-surround-mode 1))
 
   (use-package evil-mc
     :ensure t
+    :after evil
     :config
     (global-evil-mc-mode 1))
 
@@ -560,17 +594,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (tide-setup)
     (eldoc-mode 1)
     (tide-hl-identifier-mode 1))
-
-  (use-package magit
-    :ensure t
-    :defer t
-    :bind (("M-m g s" . magit-status)))
-
-  (use-package evil-magit
-    :ensure t
-    :after magit
-    :config
-    (evil-magit-init))
 
   (use-package ivy
     :ensure t
@@ -619,6 +642,17 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (setq org-display-inline-images t))
 
+  (use-package yasnippet
+    :ensure t
+    :init
+    (yas-global-mode 1)
+    :config
+    (setq yas-prompt-functions 'yas-ido-prompt))
+
+  (use-package yasnippet-snippets
+    :after yasnippet
+    :ensure t)
+
   (use-package company
     :ensure t
     :init (global-company-mode)
@@ -646,6 +680,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :ensure t)
 
   (use-package git-gutter-fringe+
+    :ensure t
     :config
     (git-gutter-fr+-minimal)
     (setq git-gutter-fr+-side 'left-fringe))
@@ -655,17 +690,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :hook (prog-mode . paren-face-mode)
     :config
     (setq paren-face-regexp "[\]\[\(\)\{\}\;]"))
-
-  (use-package yasnippet
-    :ensure t
-    :config
-    (yas-global-mode 1)
-    (setq yas-prompt-functions 'yas-ido-prompt)
-    (yas-reload-all))
-
-  (use-package yasnippet-snippets
-    :after yasnippet
-    :ensure t)
 
   (use-package evil-commentary
     :ensure t
@@ -715,7 +739,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (treemacs ht pfuture f lv faceup powerline autothemer all-the-icons memoize evil-magit transient git-gutter pos-tip tide imenu-list yasnippet-snippets winum which-key web-mode web-beautify use-package typescript-mode treemacs-evil tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative magit livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-hydra iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    ())))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
