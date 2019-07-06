@@ -8,6 +8,8 @@ set nocompatible
 set bs=indent,eol,start
 set ai
 
+imap jk <ESC>
+
 syntax on
 filetype plugin on
 

@@ -67,6 +67,7 @@ values."
                                       dart-mode
                                       iedit
                                       doom-themes
+                                      ;; doom-modeline
                                       magit
                                       evil-magit
                                       paren-face
@@ -269,7 +270,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -358,7 +359,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (spacemacs/toggle-visual-line-navigation)
 
   (setq-default auto-window-vscroll nil
-                js-indent-level 2)
+                js-indent-level 2
+                typescript-indent-level 2)
 
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
@@ -522,7 +524,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package kaolin-themes
     :config
-    (load-theme 'kaolin-mono-dark)
+    (load-theme 'kaolin-temple)
     (kaolin-treemacs-theme)
     (setq kaolin-themes-bold t
           kaolin-themes-italic t
@@ -577,27 +579,29 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (use-package evil-mc
     :ensure t
     :after evil
-    :config
+    :init
     (global-evil-mc-mode 1))
 
   (use-package tide
     :ensure t
     :hook (before-save-hook . tide-format-before-save) ; format code before saving
-    :bind (("M-m t e" . tide-project-errors)     ; shows all project errors
-           ("M-m t r" . tide-references)         ; lists all references to the symbol at point in buffer
-           ("M-m t s" . tide-rename-symbol)      ; rename all ocurrences of the symbol at point
-           ("M-m t f" . tide-fix)                ; apply code fix for the error at point
-           ("M-m t R" . tide-rename-file)        ; rename current file and all it's references in other files
-           ("M-m t j" . tide-jump-to-definition) ; jumps to definition
-           ("M-m t b" . tide-jump-back))         ; jumps back after going to definition
+    :bind (("M-m t e" . tide-project-errors)           ; shows all project errors
+           ("M-m t r" . tide-references)               ; lists all references to the symbol at point in buffer
+           ("M-m t s" . tide-rename-symbol)            ; rename all ocurrences of the symbol at point
+           ("M-m t f" . tide-fix)                      ; apply code fix for the error at point
+           ("M-m t R" . tide-rename-file)              ; rename current file and all it's references in other files
+           ("M-m t j" . tide-jump-to-definition)       ; jumps to definition
+           ("M-m t b" . tide-jump-back))               ; jumps back after going to definition
     :config
     (tide-setup)
     (eldoc-mode 1)
+    (flycheck-mode 1)
     (tide-hl-identifier-mode 1))
 
   (use-package ivy
     :ensure t
     :bind (("C-:" . avy-goto-char)
+           ("M-m ;" . avy-goto-char)
            ("C-;" . avy-goto-word-1))
     :config
     (setq ivy-count-format "(%d/%d) "
@@ -716,6 +720,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
           spaceline-buffer-size-p t)
     (powerline-reset))
 
+  ;; (use-package doom-modeline
+  ;;   :ensure t
+  ;;   :defer t
+  ;;   :config
+  ;;   (doom-modeline-mode 1))
+
   (use-package projectile
     :ensure t
     :defer t
@@ -735,11 +745,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    ())))
+    (doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
