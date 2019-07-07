@@ -1,0 +1,12 @@
+#!/bin/sh
+while read file
+do
+        case "$1" in
+        "C-d")
+                mv "$file" ~/.trash ;;
+        "C-c")
+                ~/Documents/dotfiles/scripts/cliper "$file" ;;
+        "C-w")
+                wal -i "$file" ;;
+        esac
+done
