@@ -5,7 +5,7 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-PS1='\n\e[1;34m┌──────┄┄\e[0m\e[31m \e[1m\W\e[0m\e[0m\n\e[1;34m└───┄\e[0m '
+PS1='\n\e[1;34m┌──────┄┄\]\e[31m \e[1m\W\]\n\e[1;34m└───┄\] '
 
 # aliases
 alias c='clear'
@@ -21,6 +21,9 @@ alias empty-trash="rm -r ~/.trash/*"
 
 # editing style
 set -o emacs
+
+# allows you to cd into directory by typing the dir name
+shopt -s autocd
 
 # Import colorscheme from 'wal' asynchronously
 # &   # Run the process in the background.

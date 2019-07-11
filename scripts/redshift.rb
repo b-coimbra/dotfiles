@@ -96,6 +96,10 @@ class Redshift
     @temperature = (((@position * 10).to_f / 100) * (@base_temperature))
   end
 
+  def set_temperature temperature
+    `redshift -P -O #{temperature}` rescue Errno::ENOENT abort '[!] Redshift is not installed.'
+  end
+
   def set_position input
     if input == 'h'
       @position -= 1 unless @position <= 0 || @temperature.to_f <= 1300.0
@@ -106,10 +110,6 @@ class Redshift
     elsif input == 'H'
       @position = 2
     end
-  end
-
-  def set_temperature temperature
-    `redshift -P -O #{temperature}` rescue Errno::ENOENT abort '[!] Redshift is not installed.'
   end
 
   def quit
