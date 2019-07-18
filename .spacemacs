@@ -209,7 +209,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ nil
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
@@ -270,7 +270,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -584,14 +584,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package tide
     :ensure t
-    :hook (before-save-hook . tide-format-before-save) ; format code before saving
-    :bind (("M-m t e" . tide-project-errors)           ; shows all project errors
-           ("M-m t r" . tide-references)               ; lists all references to the symbol at point in buffer
-           ("M-m t s" . tide-rename-symbol)            ; rename all ocurrences of the symbol at point
-           ("M-m t f" . tide-fix)                      ; apply code fix for the error at point
-           ("M-m t R" . tide-rename-file)              ; rename current file and all it's references in other files
-           ("M-m t j" . tide-jump-to-definition)       ; jumps to definition
-           ("M-m t b" . tide-jump-back))               ; jumps back after going to definition
+    :hook (before-save-hook . tide-format-before-save)
+    :bind (("M-m t e" . tide-project-errors)
+           ("M-m t r" . tide-references)
+           ("M-m t R" . tide-restart-server)
+           ("M-m t s" . tide-rename-symbol)
+           ("M-m t f" . tide-fix)
+           ("M-m t R" . tide-rename-file)
+           ("M-m t j" . tide-jump-to-definition)
+           ("M-m t b" . tide-jump-back))
     :config
     (tide-setup)
     (eldoc-mode 1)
@@ -711,6 +712,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (spaceline-emacs-theme)
     (setq spaceline-buffer-encoding-abbrev-p nil
+          spaceline-workspace-number-p t
           spaceline-window-numbers-unicode nil
           spaceline-minor-modes-p nil
           spaceline-major-mode-p nil
@@ -749,7 +751,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

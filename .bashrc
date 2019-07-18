@@ -5,7 +5,7 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-PS1='\n\e[1;34m┌──────┄┄\]\e[31m \e[1m\W\]\n\e[1;34m└───┄\] '
+PS1='\n\e[1;34m┌──────┄┄\]\e[31m \e[1m\W\]\]\n\e[1;34m└───┄\] '
 
 # aliases
 alias c='clear'

@@ -200,7 +200,7 @@ client.focused_inactive $bg     $bg     $white  $bg     $bg
 client.urgent           $pink   $pink   $white  $pink   $pink
 
 # border size
-for_window [class=".*"] border pixel 4
+for_window [class=".*"] border pixel 1
 
 # gaps size
 gaps inner 10
