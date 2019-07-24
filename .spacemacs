@@ -108,6 +108,7 @@ values."
                                     goto-chg
                                     elisp-slime-nav
                                     helm
+                                    helm-make
                                     exec-path-from-shell
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
