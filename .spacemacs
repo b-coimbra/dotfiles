@@ -360,7 +360,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (setq-default auto-window-vscroll nil
                 js-indent-level 2
-                typescript-indent-level 2)
+                typescript-indent-level 2
+                inhibit-compacting-font-caches t)
 
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
