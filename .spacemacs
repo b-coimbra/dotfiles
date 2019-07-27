@@ -60,6 +60,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      spaceline-all-the-icons
+                                      rust-mode
                                       tide
                                       typescript-mode
                                       company
@@ -360,7 +362,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (setq-default auto-window-vscroll nil
                 js-indent-level 2
-                typescript-indent-level 2)
+                typescript-indent-level 2
+                inhibit-compacting-font-caches t)
 
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
@@ -524,8 +527,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package kaolin-themes
     :config
-    (load-theme 'kaolin-mono-dark)
-    (kaolin-treemacs-theme)
+    (load-theme 'kaolin-temple)
     (setq kaolin-themes-bold t
           kaolin-themes-italic t
           kaolin-themes-underline t
@@ -553,6 +555,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
+
+  (use-package vc
+    :ensure t
+    :config
+    (defadvice vc-mode-line (after strip-backend () activate)
+      (when (stringp vc-mode)
+        (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
+          (setq vc-mode gitlogo)))))
 
   (use-package magit
     :ensure t
@@ -585,6 +595,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (use-package tide
     :ensure t
     :hook (before-save-hook . tide-format-before-save)
+    :init (add-hook 'typescript-mode-hook #'tide-setup)
     :bind (("M-m t e" . tide-project-errors)
            ("M-m t r" . tide-references)
            ("M-m t R" . tide-restart-server)
@@ -664,8 +675,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (add-to-list 'company-backends
                  '(company-yasnippet
-                   company-capf
-                   company-dabbrev))
+                   company-capf))
     (setq company-dabbrev-downcase 0
           company-echo-delay 0
           company-idle-delay 0.1
@@ -706,9 +716,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (progn
       (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-      (setq-default powerline-default-separator 'slant)
-      (setq spaceline-separator-dir-left '(right . right))
-      (setq spaceline-separator-dir-right '(right . right)))
+      (setq-default powerline-default-separator 'arrow-fade)
+      ;; (setq spaceline-separator-dir-left '(right . right))
+      ;; (setq spaceline-separator-dir-right '(right . right)))
+      )
     :config
     (spaceline-emacs-theme)
     (setq spaceline-buffer-encoding-abbrev-p nil
@@ -747,11 +758,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
