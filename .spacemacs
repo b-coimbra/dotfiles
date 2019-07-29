@@ -675,7 +675,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (add-to-list 'company-backends
                  '(company-yasnippet
-                   company-capf))
+                   company-capf
+                   company-dabbrev))
     (setq company-dabbrev-downcase 0
           company-echo-delay 0
           company-idle-delay 0.1
