@@ -64,6 +64,9 @@ values."
                                       rust-mode
                                       tide
                                       typescript-mode
+                                      lsp-mode
+                                      lsp-ui
+                                      company-lsp
                                       company
                                       evil-mc
                                       dart-mode
@@ -527,7 +530,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package kaolin-themes
     :config
-    (load-theme 'kaolin-temple)
+    (load-theme 'kaolin-valley-dark)
     (setq kaolin-themes-bold t
           kaolin-themes-italic t
           kaolin-themes-underline t
@@ -656,7 +659,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :ensure t
     :defer t
     :config
-    (setq org-display-inline-images t))
+    (setq org-display-inline-images t)
+    (org-babel-do-load-languages
+     'org-babel-load-languages '((C       . t)
+                                 (shell   . t)
+                                 (ruby    . t)
+                                 (python  . t)
+                                 (haskell . t))))
 
   (use-package yasnippet
     :ensure t
@@ -669,6 +678,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after yasnippet
     :ensure t)
 
+  (use-package lsp
+    ;; :hook (XXX-mode . lsp)
+    :commands lsp)
+
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package company-lsp :commands company-lsp)
+
   (use-package company
     :ensure t
     :init (global-company-mode)
@@ -677,7 +693,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
                  '(company-yasnippet
                    company-capf
                    company-dabbrev))
-    (setq company-dabbrev-downcase 0
+    (setq company-dabbrev-downcase nil
           company-echo-delay 0
           company-idle-delay 0.1
           company-minimum-prefix-length 1
@@ -717,9 +733,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (progn
       (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-      (setq-default powerline-default-separator 'arrow-fade)
-      ;; (setq spaceline-separator-dir-left '(right . right))
-      ;; (setq spaceline-separator-dir-right '(right . right)))
+      (setq-default powerline-default-separator 'slant)
+      (setq spaceline-separator-dir-left '(right . right))
+      ;; (setq spaceline-separator-dir-right '(right . right))
       )
     :config
     (spaceline-emacs-theme)
@@ -759,11 +775,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
