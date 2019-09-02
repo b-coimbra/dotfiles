@@ -64,15 +64,15 @@ values."
                                       rust-mode
                                       tide
                                       typescript-mode
-                                      lsp-mode
-                                      lsp-ui
-                                      company-lsp
+                                      ;; lsp-mode
+                                      ;; lsp-ui
+                                      ;; company-lsp
                                       company
                                       evil-mc
                                       dart-mode
                                       iedit
                                       doom-themes
-                                      ;; doom-modeline
+                                      doom-modeline
                                       magit
                                       evil-magit
                                       paren-face
@@ -359,7 +359,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  ;; (spacemacs/load-theme 'doom-tomorrow-night)
+  (spacemacs/load-theme 'doom-spacegrey)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -528,13 +528,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (setq mouse-avoidance-mode 'animate))
 
-  (use-package kaolin-themes
-    :config
-    (load-theme 'kaolin-valley-dark)
-    (setq kaolin-themes-bold t
-          kaolin-themes-italic t
-          kaolin-themes-underline t
-          kaolin-themes-distinct-company-scrollbar t))
+  ;; (use-package kaolin-themes
+  ;;   :config
+  ;;   (load-theme 'kaolin-dark)
+  ;;   (setq kaolin-themes-bold t
+  ;;         kaolin-themes-italic t
+  ;;         kaolin-themes-underline t
+  ;;         kaolin-themes-distinct-company-scrollbar t))
 
   (use-package ranger
     :ensure t
@@ -559,13 +559,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
 
-  (use-package vc
-    :ensure t
-    :config
-    (defadvice vc-mode-line (after strip-backend () activate)
-      (when (stringp vc-mode)
-        (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
-          (setq vc-mode gitlogo)))))
+  ;; (use-package vc
+  ;;   :ensure t
+  ;;   :config
+  ;;   (defadvice vc-mode-line (after strip-backend () activate)
+  ;;     (when (stringp vc-mode)
+  ;;       (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
+  ;;         (setq vc-mode gitlogo)))))
 
   (use-package magit
     :ensure t
@@ -678,12 +678,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after yasnippet
     :ensure t)
 
-  (use-package lsp
-    ;; :hook (XXX-mode . lsp)
-    :commands lsp)
+  ;; (use-package lsp
+  ;;   ;; :hook (XXX-mode . lsp)
+  ;;   :commands lsp)
 
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package company-lsp :commands company-lsp)
+  ;; (use-package lsp-ui :commands lsp-ui-mode)
+  ;; (use-package company-lsp :commands company-lsp)
 
   (use-package company
     :ensure t
@@ -728,33 +728,31 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (evil-commentary-mode))
 
-  (use-package spaceline
-    :ensure t
-    :init
-    (progn
-      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-      (setq-default powerline-default-separator 'slant)
-      (setq spaceline-separator-dir-left '(right . right))
-      ;; (setq spaceline-separator-dir-right '(right . right))
-      )
-    :config
-    (spaceline-emacs-theme)
-    (setq spaceline-buffer-encoding-abbrev-p nil
-          spaceline-workspace-number-p t
-          spaceline-window-numbers-unicode nil
-          spaceline-minor-modes-p nil
-          spaceline-major-mode-p nil
-          spaceline-buffer-size-p t
-          spaceline-window-number-p t
-          spaceline-buffer-id-p t
-          spaceline-buffer-size-p t)
-    (powerline-reset))
-
-  ;; (use-package doom-modeline
+  ;; (use-package spaceline
   ;;   :ensure t
-  ;;   :defer t
+  ;;   :init
+  ;;   (progn
+  ;;     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  ;;     (setq-default powerline-default-separator 'slant)
+  ;;     (setq spaceline-separator-dir-left '(right . right))
+  ;;     ;; (setq spaceline-separator-dir-right '(right . right))
+  ;;     )
   ;;   :config
-  ;;   (doom-modeline-mode 1))
+  ;;   (spaceline-emacs-theme)
+  ;;   (setq spaceline-buffer-encoding-abbrev-p nil
+  ;;         spaceline-workspace-number-p t
+  ;;         spaceline-window-numbers-unicode nil
+  ;;         spaceline-minor-modes-p nil
+  ;;         spaceline-major-mode-p nil
+  ;;         spaceline-buffer-size-p t
+  ;;         spaceline-window-number-p t
+  ;;         spaceline-buffer-id-p t
+  ;;         spaceline-buffer-size-p t)
+  ;;   (powerline-reset))
+
+  (use-package doom-modeline
+    :ensure t
+    :config (doom-modeline-mode 1))
 
   (use-package projectile
     :ensure t
@@ -775,11 +773,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("8c847a5675ece40017de93045a28ebd9ede7b843469c5dec78988717f943952a" "f5568ed375abea716d1bdfae0316d1d179f69972eaccd1f331b3e9863d7e174a" "0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (shrink-path evil-tutor company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
