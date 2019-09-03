@@ -41,6 +41,7 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     lsp
      ivy
      ;; auto-completion
      ;; better-defaults
@@ -60,13 +61,15 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      counsel-etags
+                                      swiper
                                       spaceline-all-the-icons
                                       rust-mode
                                       tide
                                       typescript-mode
-                                      ;; lsp-mode
-                                      ;; lsp-ui
-                                      ;; company-lsp
+                                      lsp-mode
+                                      lsp-ui
+                                      company-lsp
                                       company
                                       evil-mc
                                       dart-mode
@@ -111,8 +114,8 @@ values."
                                     flx
                                     evil-visualstar
                                     goto-chg
-                                    elisp-slime-nav
                                     helm
+                                    elisp-slime-nav
                                     exec-path-from-shell
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
@@ -371,7 +374,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Ligatures from the Fira Code font
   (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
 
- (defconst fira-code-font-lock-keywords-alist
+  (defconst fira-code-font-lock-keywords-alist
     (mapcar (lambda (regex-char-pair)
               `(,(car regex-char-pair)
                 (0 (prog1 ()
@@ -678,19 +681,38 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after yasnippet
     :ensure t)
 
-  ;; (use-package lsp
-  ;;   ;; :hook (XXX-mode . lsp)
-  ;;   :commands lsp)
+  (use-package counsel-etags
+    :ensure t
+    :bind (("C-]" . counsel-etags-find-tag-at-point))
+    :init
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (add-hook 'after-save-hook
+                          'counsel-etags-virtual-update-tags 'append 'local)))
+    :config
+    (setq counsel-etags-update-interval 60
+          tags-revert-without-query t)
+    (add-to-list 'counsel-etags-ignore-directories "build"))
 
-  ;; (use-package lsp-ui :commands lsp-ui-mode)
-  ;; (use-package company-lsp :commands company-lsp)
+  (use-package lsp
+    :hook ((js2-mode        . lsp-mode)
+           (typescript-mode . lsp-mode))
+    :commands lsp)
+
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :hook (lsp-mode . lsp-ui-mode))
+
+  (use-package company-lsp
+    :commands company-lsp)
 
   (use-package company
     :ensure t
     :init (global-company-mode)
     :config
     (add-to-list 'company-backends
-                 '(company-yasnippet
+                 '(company-lsp
+                   company-yasnippet
                    company-capf
                    company-dabbrev))
     (setq company-dabbrev-downcase nil
@@ -752,7 +774,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package doom-modeline
     :ensure t
-    :config (doom-modeline-mode 1))
+    :config
+    (setq doom-modeline-major-mode-icon nil
+          doom-modeline-buffer-modification-icon nil)
+    (doom-modeline-mode 1))
 
   (use-package projectile
     :ensure t
@@ -777,7 +802,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (shrink-path evil-tutor company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (counsel-etags counsel swiper helm shrink-path evil-tutor company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
