@@ -41,7 +41,6 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     lsp
      ivy
      ;; auto-completion
      ;; better-defaults
@@ -362,7 +361,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  (spacemacs/load-theme 'doom-spacegrey)
+  ;; (spacemacs/load-theme 'doom-spacegrey)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -531,13 +530,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (setq mouse-avoidance-mode 'animate))
 
-  ;; (use-package kaolin-themes
-  ;;   :config
-  ;;   (load-theme 'kaolin-dark)
-  ;;   (setq kaolin-themes-bold t
-  ;;         kaolin-themes-italic t
-  ;;         kaolin-themes-underline t
-  ;;         kaolin-themes-distinct-company-scrollbar t))
+  (use-package kaolin-themes
+    :config
+    (load-theme 'kaolin-dark)
+    (setq kaolin-themes-bold t
+          kaolin-themes-italic t
+          kaolin-themes-underline t
+          kaolin-themes-distinct-company-scrollbar t))
 
   (use-package ranger
     :ensure t
@@ -562,13 +561,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
 
-  ;; (use-package vc
-  ;;   :ensure t
-  ;;   :config
-  ;;   (defadvice vc-mode-line (after strip-backend () activate)
-  ;;     (when (stringp vc-mode)
-  ;;       (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
-  ;;         (setq vc-mode gitlogo)))))
+  (use-package vc
+    :ensure t
+    :config
+    (defadvice vc-mode-line (after strip-backend () activate)
+      (when (stringp vc-mode)
+        (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
+          (setq vc-mode gitlogo)))))
 
   (use-package magit
     :ensure t
@@ -618,9 +617,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package ivy
     :ensure t
-    :bind (("C-:" . avy-goto-char)
+    :bind (("C-:"   . avy-goto-char)
            ("M-m ;" . avy-goto-char)
-           ("C-;" . avy-goto-word-1))
+           ("C-;"   . avy-goto-word-1))
     :config
     (setq ivy-count-format "(%d/%d) "
           avy-background t))
@@ -750,34 +749,32 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (evil-commentary-mode))
 
-  ;; (use-package spaceline
-  ;;   :ensure t
-  ;;   :init
-  ;;   (progn
-  ;;     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  ;;     (setq-default powerline-default-separator 'slant)
-  ;;     (setq spaceline-separator-dir-left '(right . right))
-  ;;     ;; (setq spaceline-separator-dir-right '(right . right))
-  ;;     )
-  ;;   :config
-  ;;   (spaceline-emacs-theme)
-  ;;   (setq spaceline-buffer-encoding-abbrev-p nil
-  ;;         spaceline-workspace-number-p t
-  ;;         spaceline-window-numbers-unicode nil
-  ;;         spaceline-minor-modes-p nil
-  ;;         spaceline-major-mode-p nil
-  ;;         spaceline-buffer-size-p t
-  ;;         spaceline-window-number-p t
-  ;;         spaceline-buffer-id-p t
-  ;;         spaceline-buffer-size-p t)
-  ;;   (powerline-reset))
-
-  (use-package doom-modeline
+  (use-package spaceline
     :ensure t
+    :init
+    (progn
+      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+      (setq-default powerline-default-separator 'slant)
+      (setq spaceline-separator-dir-left '(right . right)))
     :config
-    (setq doom-modeline-major-mode-icon nil
-          doom-modeline-buffer-modification-icon nil)
-    (doom-modeline-mode 1))
+    (spaceline-emacs-theme)
+    (setq spaceline-buffer-encoding-abbrev-p nil
+          spaceline-workspace-number-p t
+          spaceline-window-numbers-unicode nil
+          spaceline-minor-modes-p nil
+          spaceline-major-mode-p nil
+          spaceline-buffer-size-p t
+          spaceline-window-number-p t
+          spaceline-buffer-id-p t
+          spaceline-buffer-size-p t)
+    (powerline-reset))
+
+  ;; (use-package doom-modeline
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq doom-modeline-major-mode-icon nil
+  ;;         doom-modeline-buffer-modification-icon nil)
+  ;;   (doom-modeline-mode 1))
 
   (use-package projectile
     :ensure t
@@ -802,7 +799,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (counsel-etags counsel swiper helm shrink-path evil-tutor company-lsp lsp-ui spinner dash-functional lsp-mode auto-complete mode-icons rainbow-delimiters vc-mode airline-themes toml-mode racer flycheck-rust cargo markdown-mode 0blayout persp-mode workgroups2 rust-mode apropospriate-theme doom-modeline spaceline-all-the-icons yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline slim-mode scss-mode sass-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-make haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes diminish diff-hl dart-mode counsel-projectile company coffee-mode bind-map auto-compile))))
+    (smeargle orgit org-plus-contrib magit-gitflow magit-popup transient gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link counsel-projectile yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-etags company-lsp coffee-mode bind-map auto-compile ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
