@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# xbacklight backlight inc/dec N
+file, action, _ = *ARGV
+operations = { inc: '+', dec: '-' }
+mod = 10
+
+IO.write(file, (eval [File.open(file).read, operations[action.to_sym], mod].join ' '))
