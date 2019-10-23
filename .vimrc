@@ -5,7 +5,6 @@ if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
 endif
 
 set number relativenumber
-set clipboard=unnamedplus
 set nocompatible
 set bs=indent,eol,start
 set ai
