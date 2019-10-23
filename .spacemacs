@@ -60,6 +60,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      ivy-rich
                                       counsel-etags
                                       swiper
                                       spaceline-all-the-icons
@@ -361,7 +362,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  (spacemacs/load-theme 'gruvbox-custom)
+  ;; (spacemacs/load-theme 'doom-wilmersdorf)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -534,13 +535,20 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (setq mouse-avoidance-mode 'animate))
 
-  ;; (use-package kaolin-themes
+  (use-package kaolin-themes
+    :config
+    (load-theme 'kaolin-temple)
+    (setq kaolin-themes-bold t
+          kaolin-themes-italic t
+          kaolin-themes-underline t
+          kaolin-themes-distinct-company-scrollbar t))
+
+  ;; (use-package doom-themes
+  ;;   :ensure t
   ;;   :config
-  ;;   (load-theme 'doom-nord)
-  ;;   (setq kaolin-themes-bold t
-  ;;         kaolin-themes-italic t
-  ;;         kaolin-themes-underline t
-  ;;         kaolin-themes-distinct-company-scrollbar t))
+  ;;   (spacemacs/load-theme 'doom-opera)
+  ;;   (setq doom-themes-enable-bold t
+  ;;         doom-themes-enable-italic t))
 
   (use-package ranger
     :ensure t
@@ -565,13 +573,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
 
-  (use-package vc
-    :ensure t
-    :config
-    (defadvice vc-mode-line (after strip-backend () activate)
-      (when (stringp vc-mode)
-        (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
-          (setq vc-mode gitlogo)))))
+  ;; (use-package vc
+  ;;   :ensure t
+  ;;   :config
+  ;;   (defadvice vc-mode-line (after strip-backend () activate)
+  ;;     (when (stringp vc-mode)
+  ;;       (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
+  ;;         (setq vc-mode gitlogo)))))
 
   (use-package magit
     :ensure t
@@ -621,12 +629,19 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package ivy
     :ensure t
-    :bind (("C-:"   . avy-goto-char)
-           ("M-m ;" . avy-goto-char)
-           ("C-;"   . avy-goto-word-1))
+    :bind (("C-:"     . avy-goto-char)
+           ("M-m ;"   . avy-goto-char)
+           ("C-;"     . avy-goto-word-1))
     :config
     (setq ivy-count-format "(%d/%d) "
           avy-background t))
+
+  (use-package ivy-rich
+    :after ivy
+    :init
+    (ivy-rich-mode 1)
+    :config
+    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
   (use-package flycheck
     :ensure t
@@ -723,6 +738,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
           company-echo-delay 0
           company-idle-delay 0.1
           company-minimum-prefix-length 1
+          company-show-numbers t
           company-alignip-align-annotations t))
 
   (use-package treemacs
@@ -730,7 +746,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :defer t
     :bind (("M-m t t" . treemacs))
     :config
-    (setq treemacs-no-png-images t
+    ;; (kaolin-treemacs-theme)
+    (doom-themes-treemacs-config)
+    (setq treemacs-no-png-images nil
           treemacs-width 25))
 
   (use-package treemacs-evil
@@ -784,6 +802,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (use-package projectile
     :ensure t
     :defer t
+    :bind (("M-m p s" . counsel-projectile-git-grep))
     :config
     (projectile-mode)
     (setq projectile-enable-caching t))
@@ -800,11 +819,38 @@ before packages are loaded. If you are unsure, you should try in setting them in
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
  '(custom-safe-themes
    (quote
-    ("e3c87e869f94af65d358aa279945a3daf46f8185f1a5756ca1c90759024593dd" "37e505d01c17853668103bb825f2a7ab7822740a3aa9885bf83fb8fe431a49e6" "8c847a5675ece40017de93045a28ebd9ede7b843469c5dec78988717f943952a" "f5568ed375abea716d1bdfae0316d1d179f69972eaccd1f331b3e9863d7e174a" "0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+    ("06e4b3fdcbadc29ff95a7146dee846cd027cfefca871b2e9142b54ad5de4832f" "e62b66040cb90a4171aa7368aced4ab9d8663956a62a5590252b0bc19adde6bd" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "e3c87e869f94af65d358aa279945a3daf46f8185f1a5756ca1c90759024593dd" "37e505d01c17853668103bb825f2a7ab7822740a3aa9885bf83fb8fe431a49e6" "8c847a5675ece40017de93045a28ebd9ede7b843469c5dec78988717f943952a" "f5568ed375abea716d1bdfae0316d1d179f69972eaccd1f331b3e9863d7e174a" "0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
  '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#5B6268")
+ '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
+ '(objed-cursor-color "#ff6c6b")
  '(package-selected-packages
    (quote
-    (company-tern smeargle orgit org-plus-contrib magit-gitflow magit-popup transient gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link counsel-projectile yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-etags company-lsp coffee-mode bind-map auto-compile ace-jump-helm-line))))
+    (rjsx-mode jsx-mode ivy-rich nyan-mode company-tabnine unicode-escape names rainbow-delimiters rainbow-identifiers solaire-mode treemacs treemacs-projectile company-tern smeargle orgit org-plus-contrib magit-gitflow magit-popup transient gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link counsel-projectile yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc iedit helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag haskell-mode gruvbox-theme git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-etags company-lsp coffee-mode bind-map auto-compile ace-jump-helm-line)))
+ '(vc-annotate-background "#282c34")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#98be65")
+    (cons 40 "#b4be6c")
+    (cons 60 "#d0be73")
+    (cons 80 "#ECBE7B")
+    (cons 100 "#e6ab6a")
+    (cons 120 "#e09859")
+    (cons 140 "#da8548")
+    (cons 160 "#d38079")
+    (cons 180 "#cc7cab")
+    (cons 200 "#c678dd")
+    (cons 220 "#d974b7")
+    (cons 240 "#ec7091")
+    (cons 260 "#ff6c6b")
+    (cons 280 "#cf6162")
+    (cons 300 "#9f585a")
+    (cons 320 "#6f4e52")
+    (cons 340 "#5B6268")
+    (cons 360 "#5B6268")))
+ '(vc-annotate-very-old-color nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
