@@ -61,12 +61,11 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      react-snippets
                                       ivy-rich
                                       counsel-etags
                                       swiper
-                                      spaceline-all-the-icons
                                       rust-mode
-                                      tide
                                       typescript-mode
                                       lsp-mode
                                       lsp-ui
@@ -191,7 +190,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Fantasque Sans Mono"
+   dotspacemacs-default-font '("Iosevka"
                                :size 16
                                :weight normal
                                :width normal
@@ -363,7 +362,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  ;; (spacemacs/load-theme 'doom-wilmersdorf)
+  (spacemacs/load-theme 'gruvbox-custom)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -536,13 +535,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (setq mouse-avoidance-mode 'animate))
 
-  (use-package kaolin-themes
-    :config
-      (load-theme 'kaolin-dark)
-    (setq kaolin-themes-bold t
-          kaolin-themes-italic t
-          kaolin-themes-underline t
-          kaolin-themes-distinct-company-scrollbar t))
+  ;; (use-package kaolin-themes
+  ;;   :config
+  ;;   (load-theme 'kaolin-dark)
+  ;;   (setq kaolin-themes-bold t
+  ;;         kaolin-themes-italic t
+  ;;         kaolin-themes-underline t
+  ;;         kaolin-themes-distinct-company-scrollbar t))
 
   ;; (use-package doom-themes
   ;;   :ensure t
@@ -610,23 +609,23 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :init
     (global-evil-mc-mode 1))
 
-  (use-package tide
-    :ensure t
-    :hook (before-save-hook . tide-format-before-save)
-    :init (add-hook 'typescript-mode-hook #'tide-setup)
-    :bind (("M-m t e" . tide-project-errors)
-           ("M-m t r" . tide-references)
-           ("M-m t R" . tide-restart-server)
-           ("M-m t s" . tide-rename-symbol)
-           ("M-m t f" . tide-fix)
-           ("M-m t R" . tide-rename-file)
-           ("M-m t j" . tide-jump-to-definition)
-           ("M-m t b" . tide-jump-back))
-    :config
-    (tide-setup)
-    (eldoc-mode 1)
-    (flycheck-mode 1)
-    (tide-hl-identifier-mode 1))
+  ;; (use-package tide
+  ;;   :ensure t
+  ;;   :hook (before-save-hook . tide-format-before-save)
+  ;;   :init (add-hook 'typescript-mode-hook #'tide-setup)
+  ;;   :bind (("M-m t e" . tide-project-errors)
+  ;;          ("M-m t r" . tide-references)
+  ;;          ("M-m t R" . tide-restart-server)
+  ;;          ("M-m t s" . tide-rename-symbol)
+  ;;          ("M-m t f" . tide-fix)
+  ;;          ("M-m t R" . tide-rename-file)
+  ;;          ("M-m t j" . tide-jump-to-definition)
+  ;;          ("M-m t b" . tide-jump-back))
+  ;;   :config
+  ;;   (tide-setup)
+  ;;   (eldoc-mode 1)
+  ;;   (flycheck-mode 1)
+  ;;   (tide-hl-identifier-mode 1))
 
   (use-package ivy
     :ensure t
@@ -715,16 +714,36 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (add-to-list 'counsel-etags-ignore-directories "build"))
 
   (use-package lsp-mode
-    :hook ((js2-mode        . lsp-mode)
-           (typescript-mode . lsp-mode))
+    :ensure t
+    :bind (("M-m ." . xref-find-definitions)
+           ("M-m ," . xref-pop-marker-stack))
+    :hook ((js2-mode        . lsp)
+           (js-mode         . lsp)
+           (typescript-mode . lsp)
+           (rust-mode       . lsp))
     :commands lsp)
 
   (use-package lsp-ui
+    :after lsp-mode
+    :requires lsp-mode flycheck
     :commands lsp-ui-mode
-    :hook (lsp-mode . lsp-ui-mode))
+    :hook (lsp-mode . lsp-ui-mode)
+    :config
+    (setq lsp-ui-doc-enable t
+          lsp-ui-sideline-enable t
+          lsp-ui-flycheck-enable t
+          lsp-ui-flycheck-live-reporting t
+          lsp-ui-sideline-toggle-symbols-info t
+          lsp-ui-sideline-show-hover t
+          lsp-ui-peek-enable t))
 
   (use-package company-lsp
-    :commands company-lsp)
+    :requires company
+    :commands company-lsp
+    :config
+    (setq company-transformers nil
+          company-lsp-async t
+          company-lsp-cache-candidates nil))
 
   (use-package company
     :ensure t
@@ -740,7 +759,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
           company-idle-delay 0.1
           company-minimum-prefix-length 1
           company-show-numbers t
-          company-alignip-align-annotations t))
+          company-alignip-align-annotations t
+          company-begin-commands '(self-insert-command)))
 
   (use-package treemacs
     :ensure t
@@ -779,12 +799,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (progn
       (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
       (setq-default powerline-default-separator 'slant)
-      (setq spaceline-separator-dir-left '(right . right)))
+      ;; (setq spaceline-separator-dir-left '(right . right))
+      )
     :config
     (spaceline-emacs-theme)
     (setq spaceline-buffer-encoding-abbrev-p nil
           spaceline-workspace-number-p t
           spaceline-window-numbers-unicode nil
+          spaceline-version-control-p nil
           spaceline-minor-modes-p nil
           spaceline-major-mode-p nil
           spaceline-buffer-size-p t
@@ -818,39 +840,38 @@ before packages are loaded. If you are unsure, you should try in setting them in
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#3c3836" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#d3869b" "#8ec07c" "#ebdbb2"])
- '(custom-safe-themes
-   (quote
-    ("06e4b3fdcbadc29ff95a7146dee846cd027cfefca871b2e9142b54ad5de4832f" "e62b66040cb90a4171aa7368aced4ab9d8663956a62a5590252b0bc19adde6bd" "34c99997eaa73d64b1aaa95caca9f0d64229871c200c5254526d0062f8074693" "e3c87e869f94af65d358aa279945a3daf46f8185f1a5756ca1c90759024593dd" "37e505d01c17853668103bb825f2a7ab7822740a3aa9885bf83fb8fe431a49e6" "8c847a5675ece40017de93045a28ebd9ede7b843469c5dec78988717f943952a" "f5568ed375abea716d1bdfae0316d1d179f69972eaccd1f331b3e9863d7e174a" "0f1733ad53138ddd381267b4033bcb07f5e75cd7f22089c7e650f1bb28fc67f4" "886fe9a7e4f5194f1c9b1438955a9776ff849f9e2f2bbb4fa7ed8879cdca0631" "ff829b1ac22bbb7cee5274391bc5c9b3ddb478e0ca0b94d97e23e8ae1a3f0c3e" "11e0bc5e71825b88527e973b80a84483a2cfa1568592230a32aedac2a32426c1" "a9d67f7c030b3fa6e58e4580438759942185951e9438dd45f2c668c8d7ab2caf" "fa477d10f10aa808a2d8165a4f7e6cee1ab7f902b6853fbee911a9e27cf346bc" "bee55ba5e878d0584db9b2fb33f75c348a3008fcfe8e05ab8cae897ca604fd95" "6e38567da69b5110c8e19564b7b2792add8e78a31dfb270168509e7ae0147a8d" "9f08dacc5b23d5eaec9cccb6b3d342bd4fdb05faf144bdcd9c4b5859ac173538" "ae4e0372ff28b6bf8f1cca8c081a7a63fb7cd2d5a139309cc4fa55d0f507f748" "42c5bc5f5fe4f35aa0c44a50744e17b59ee7c4ae684daf1a9162da87bd639ccb" default)))
+ '(custom-safe-themes (quote nil))
  '(evil-want-Y-yank-to-eol nil)
- '(fci-rule-color "#5B6268")
- '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
- '(objed-cursor-color "#ff6c6b")
+ '(fci-rule-color "#C0C5CE")
+ '(jdee-db-active-breakpoint-face-colors (cons "#1B2B34" "#FAC863"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#1B2B34" "#99C794"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#1B2B34" "#A7ADBA"))
+ '(objed-cursor-color "#EC5f67")
  '(package-selected-packages
    (quote
-    ()))
- '(vc-annotate-background "#282c34")
+    (lv rjsx-mode jsx-mode react-snippets color-theme-sanityinc-tomorrow omnibox yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face org-projectile org-present org-pomodoro org-mime org-download nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-rich iedit htmlize helm-make haskell-mode gruvbox-theme gnuplot git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-projectile counsel-etags company-lsp coffee-mode bind-map auto-compile)))
+ '(pdf-view-midnight-colors (cons "#1B2B34" "#D8DEE9"))
+ '(vc-annotate-background "#1B2B34")
  '(vc-annotate-color-map
    (list
-    (cons 20 "#98be65")
-    (cons 40 "#b4be6c")
-    (cons 60 "#d0be73")
-    (cons 80 "#ECBE7B")
-    (cons 100 "#e6ab6a")
-    (cons 120 "#e09859")
-    (cons 140 "#da8548")
-    (cons 160 "#d38079")
-    (cons 180 "#cc7cab")
-    (cons 200 "#c678dd")
-    (cons 220 "#d974b7")
-    (cons 240 "#ec7091")
-    (cons 260 "#ff6c6b")
-    (cons 280 "#cf6162")
-    (cons 300 "#9f585a")
-    (cons 320 "#6f4e52")
-    (cons 340 "#5B6268")
-    (cons 360 "#5B6268")))
+    (cons 20 "#99C794")
+    (cons 40 "#b9c783")
+    (cons 60 "#d9c773")
+    (cons 80 "#FAC863")
+    (cons 100 "#f9b55f")
+    (cons 120 "#f9a35b")
+    (cons 140 "#F99157")
+    (cons 160 "#f18a69")
+    (cons 180 "#e9847b")
+    (cons 200 "#E27E8D")
+    (cons 220 "#e57380")
+    (cons 240 "#e86973")
+    (cons 260 "#EC5f67")
+    (cons 280 "#da727b")
+    (cons 300 "#c98690")
+    (cons 320 "#b899a5")
+    (cons 340 "#C0C5CE")
+    (cons 360 "#C0C5CE")))
  '(vc-annotate-very-old-color nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
