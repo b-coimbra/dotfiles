@@ -362,7 +362,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  (spacemacs/load-theme 'gruvbox-custom)
+  ;; (spacemacs/load-theme 'gruvbox-custom)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -543,12 +543,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;         kaolin-themes-underline t
   ;;         kaolin-themes-distinct-company-scrollbar t))
 
-  ;; (use-package doom-themes
-  ;;   :ensure t
-  ;;   :config
-  ;;   (spacemacs/load-theme 'doom-opera)
-  ;;   (setq doom-themes-enable-bold t
-  ;;         doom-themes-enable-italic t))
+  (use-package doom-themes
+    :ensure t
+    :config
+    (spacemacs/load-theme 'doom-gruvbox)
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italic t))
 
   (use-package ranger
     :ensure t
@@ -572,14 +572,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
-
-  ;; (use-package vc
-  ;;   :ensure t
-  ;;   :config
-  ;;   (defadvice vc-mode-line (after strip-backend () activate)
-  ;;     (when (stringp vc-mode)
-  ;;       (let ((gitlogo (replace-regexp-in-string "^ Git." " " vc-mode)))
-  ;;         (setq vc-mode gitlogo)))))
 
   (use-package magit
     :ensure t
@@ -608,24 +600,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after evil
     :init
     (global-evil-mc-mode 1))
-
-  ;; (use-package tide
-  ;;   :ensure t
-  ;;   :hook (before-save-hook . tide-format-before-save)
-  ;;   :init (add-hook 'typescript-mode-hook #'tide-setup)
-  ;;   :bind (("M-m t e" . tide-project-errors)
-  ;;          ("M-m t r" . tide-references)
-  ;;          ("M-m t R" . tide-restart-server)
-  ;;          ("M-m t s" . tide-rename-symbol)
-  ;;          ("M-m t f" . tide-fix)
-  ;;          ("M-m t R" . tide-rename-file)
-  ;;          ("M-m t j" . tide-jump-to-definition)
-  ;;          ("M-m t b" . tide-jump-back))
-  ;;   :config
-  ;;   (tide-setup)
-  ;;   (eldoc-mode 1)
-  ;;   (flycheck-mode 1)
-  ;;   (tide-hl-identifier-mode 1))
 
   (use-package ivy
     :ensure t
@@ -715,8 +689,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (use-package lsp-mode
     :ensure t
-    :bind (("M-m ." . xref-find-definitions)
-           ("M-m ," . xref-pop-marker-stack))
+    :bind (("M-m ."   . xref-find-definitions)
+           ("M-m ,"   . xref-pop-marker-stack)
+           ("M-m l R" . lsp-rename)
+           ("M-m l R" . lsp-rename))
     :hook ((js2-mode        . lsp)
            (js-mode         . lsp)
            (typescript-mode . lsp)
@@ -728,6 +704,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :requires lsp-mode flycheck
     :commands lsp-ui-mode
     :hook (lsp-mode . lsp-ui-mode)
+    :bind (("M-m l i" . lsp-ui-peek-find-implementation)
+           ("M-m l r" . lsp-ui-peek-find-references)
+           ("M-m l d" . lsp-ui-peek-find-definitions)
+           ("M-m l l" . lsp-ui-flycheck-list)
+           ("M-m l a" . lsp-ui-sideline-apply-code-actions))
     :config
     (setq lsp-ui-doc-enable t
           lsp-ui-sideline-enable t
@@ -756,7 +737,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
                    company-dabbrev))
     (setq company-dabbrev-downcase nil
           company-echo-delay 0
-          company-idle-delay 0.1
+          company-idle-delay 0.3
           company-minimum-prefix-length 1
           company-show-numbers t
           company-alignip-align-annotations t
@@ -793,34 +774,39 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (evil-commentary-mode))
 
-  (use-package spaceline
-    :ensure t
-    :init
-    (progn
-      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-      (setq-default powerline-default-separator 'slant)
-      ;; (setq spaceline-separator-dir-left '(right . right))
-      )
-    :config
-    (spaceline-emacs-theme)
-    (setq spaceline-buffer-encoding-abbrev-p nil
-          spaceline-workspace-number-p t
-          spaceline-window-numbers-unicode nil
-          spaceline-version-control-p nil
-          spaceline-minor-modes-p nil
-          spaceline-major-mode-p nil
-          spaceline-buffer-size-p t
-          spaceline-window-number-p t
-          spaceline-buffer-id-p t
-          spaceline-buffer-size-p t)
-    (powerline-reset))
-
-  ;; (use-package doom-modeline
+  ;; (use-package spaceline
   ;;   :ensure t
+  ;;   :init
+  ;;   (progn
+  ;;     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  ;;     (setq-default powerline-default-separator 'slant)
+  ;;     ;; (setq spaceline-separator-dir-left '(right . right))
+  ;;     )
   ;;   :config
-  ;;   (setq doom-modeline-major-mode-icon nil
-  ;;         doom-modeline-buffer-modification-icon nil)
-  ;;   (doom-modeline-mode 1))
+  ;;   (spaceline-emacs-theme)
+  ;;   (setq spaceline-buffer-encoding-abbrev-p nil
+  ;;         spaceline-workspace-number-p t
+  ;;         spaceline-window-numbers-unicode nil
+  ;;         spaceline-version-control-p nil
+  ;;         spaceline-minor-modes-p nil
+  ;;         spaceline-major-mode-p nil
+  ;;         spaceline-buffer-size-p t
+  ;;         spaceline-window-number-p t
+  ;;         spaceline-buffer-id-p t
+  ;;         spaceline-buffer-size-p t)
+  ;;   (powerline-reset))
+
+  (use-package doom-modeline
+    :ensure t
+    :config
+    (setq doom-modeline-major-mode-icon t
+          doom-modeline-major-mode-color-icon nil
+          doom-modeline-icon (display-graphic-p)
+          doom-modeline-buffer-modification-icon nil
+          doom-modeline-flycheck-icon nil
+          doom-modeline-checker-simple-format t
+          doom-modeline-buffer-encoding nil)
+    (doom-modeline-mode 1))
 
   (use-package projectile
     :ensure t
