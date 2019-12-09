@@ -61,6 +61,11 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      telephone-line
+                                      org-bullets
+                                      crystal-mode
+                                      flycheck-crystal
+                                      rjsx-mode
                                       react-snippets
                                       ivy-rich
                                       counsel-etags
@@ -362,7 +367,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
   "My dotspacemacs."
-  ;; (spacemacs/load-theme 'gruvbox-custom)
+  (spacemacs/load-theme 'gruvbox-custom)
   (spacemacs/toggle-highlight-current-line-globally-off)
   (spacemacs/toggle-visual-line-navigation)
 
@@ -496,6 +501,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
               ;;("\\(x\\)"                     #Xe16b)
               ;; ("[^:=]\\(:\\)[^:=]"           #Xe16c)
               ("[^\\+<>]\\(\\+\\)[^\\+<>]"   #Xe16d)
+
               ("[^\\*/<>]\\(\\*\\)[^\\*/<>]" #Xe16f))))
 
   (defun add-fira-code-symbol-keywords ()
@@ -543,12 +549,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;         kaolin-themes-underline t
   ;;         kaolin-themes-distinct-company-scrollbar t))
 
-  (use-package doom-themes
-    :ensure t
-    :config
-    (spacemacs/load-theme 'doom-gruvbox)
-    (setq doom-themes-enable-bold t
-          doom-themes-enable-italic t))
+  ;; (use-package doom-themes
+  ;;   :ensure t
+  ;;   :config
+  ;;   (spacemacs/load-theme 'doom-nord)
+  ;;   (setq doom-themes-enable-bold t
+  ;;         doom-themes-enable-italic t))
 
   (use-package ranger
     :ensure t
@@ -600,6 +606,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :after evil
     :init
     (global-evil-mc-mode 1))
+
+  (use-package evil-commentary
+    :ensure t
+    :config
+    (evil-commentary-mode))
+
+  (use-package treemacs-evil
+    :after treemacs evil
+    :ensure t)
 
   (use-package ivy
     :ensure t
@@ -662,6 +677,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                  (python  . t)
                                  (haskell . t))))
 
+  (use-package org-bullets
+    :ensure t
+    :hook (org-mode . org-bullets-mode))
+
   (use-package yasnippet
     :ensure t
     :init
@@ -691,17 +710,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :ensure t
     :bind (("M-m ."   . xref-find-definitions)
            ("M-m ,"   . xref-pop-marker-stack)
-           ("M-m l R" . lsp-rename)
            ("M-m l R" . lsp-rename))
-    :hook ((js2-mode        . lsp)
-           (js-mode         . lsp)
-           (typescript-mode . lsp)
-           (rust-mode       . lsp))
-    :commands lsp)
+    :hook ((js2-mode        . lsp-deferred)
+           (js-mode         . lsp-deferred)
+           (rjsx-mode       . lsp-deferred)
+           (typescript-mode . lsp-deferred)
+           (rust-mode       . lsp-deferred)
+           (ruby-mode       . lsp-deferred))
+    :commands (lsp lsp-deferred))
 
   (use-package lsp-ui
+    :ensure t
     :after lsp-mode
-    :requires lsp-mode flycheck
     :commands lsp-ui-mode
     :hook (lsp-mode . lsp-ui-mode)
     :bind (("M-m l i" . lsp-ui-peek-find-implementation)
@@ -753,10 +773,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq treemacs-no-png-images nil
           treemacs-width 25))
 
-  (use-package treemacs-evil
-    :after treemacs evil
-    :ensure t)
-
   (use-package git-gutter-fringe+
     :ensure t
     :config
@@ -769,44 +785,44 @@ before packages are loaded. If you are unsure, you should try in setting them in
     :config
     (setq paren-face-regexp "[\]\[\(\)\{\}\;]"))
 
-  (use-package evil-commentary
+  (use-package spaceline
     :ensure t
+    :init
+    (progn
+      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+      (setq-default powerline-default-separator 'slant)
+      ;; (setq spaceline-separator-dir-left '(right . right))
+      )
     :config
-    (evil-commentary-mode))
+    (spaceline-emacs-theme)
+    (setq spaceline-buffer-encoding-abbrev-p nil
+          spaceline-workspace-number-p t
+          spaceline-window-numbers-unicode nil
+          spaceline-version-control-p nil
+          spaceline-minor-modes-p nil
+          spaceline-major-mode-p nil
+          spaceline-buffer-size-p t
+          spaceline-window-number-p t
+          spaceline-buffer-id-p t
+          spaceline-buffer-size-p t)
+    (powerline-reset))
 
-  ;; (use-package spaceline
+  ;; (use-package doom-modeline
   ;;   :ensure t
-  ;;   :init
-  ;;   (progn
-  ;;     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  ;;     (setq-default powerline-default-separator 'slant)
-  ;;     ;; (setq spaceline-separator-dir-left '(right . right))
-  ;;     )
   ;;   :config
-  ;;   (spaceline-emacs-theme)
-  ;;   (setq spaceline-buffer-encoding-abbrev-p nil
-  ;;         spaceline-workspace-number-p t
-  ;;         spaceline-window-numbers-unicode nil
-  ;;         spaceline-version-control-p nil
-  ;;         spaceline-minor-modes-p nil
-  ;;         spaceline-major-mode-p nil
-  ;;         spaceline-buffer-size-p t
-  ;;         spaceline-window-number-p t
-  ;;         spaceline-buffer-id-p t
-  ;;         spaceline-buffer-size-p t)
-  ;;   (powerline-reset))
+  ;;   (setq doom-modeline-major-mode-icon nil
+  ;;         doom-modeline-major-mode-color-icon nil
+  ;;         doom-modeline-icon (display-graphic-p)
+  ;;         doom-modeline-buffer-modification-icon nil
+  ;;         doom-modeline-flycheck-icon nil
+  ;;         doom-modeline-checker-simple-format t
+  ;;         doom-modeline-buffer-encoding nil)
+  ;;   (doom-modeline-mode))
 
-  (use-package doom-modeline
-    :ensure t
-    :config
-    (setq doom-modeline-major-mode-icon t
-          doom-modeline-major-mode-color-icon nil
-          doom-modeline-icon (display-graphic-p)
-          doom-modeline-buffer-modification-icon nil
-          doom-modeline-flycheck-icon nil
-          doom-modeline-checker-simple-format t
-          doom-modeline-buffer-encoding nil)
-    (doom-modeline-mode 1))
+  ;; (use-package telephone-line
+  ;;   :ensure t
+  ;;   :config
+  ;;   (telephone-line-mode))
 
   (use-package projectile
     :ensure t
@@ -835,7 +851,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(objed-cursor-color "#EC5f67")
  '(package-selected-packages
    (quote
-    (lv rjsx-mode jsx-mode react-snippets color-theme-sanityinc-tomorrow omnibox yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face org-projectile org-present org-pomodoro org-mime org-download nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-rich iedit htmlize helm-make haskell-mode gruvbox-theme gnuplot git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-projectile counsel-etags company-lsp coffee-mode bind-map auto-compile)))
+    (epresent zone-sl zone-rainbow zone-nyan csharp-mode nimbus-theme poet-theme telephone-line org-bullets flycheck-crystal crystal-mode dap-mode bui tree-mode lv rjsx-mode jsx-mode react-snippets color-theme-sanityinc-tomorrow omnibox yasnippet-snippets winum which-key web-mode web-beautify use-package treemacs-evil tide tagedit spaceline-all-the-icons slim-mode scss-mode sass-mode rust-mode ranger racket-mode pug-mode powerline-evil paren-face org-projectile org-present org-pomodoro org-mime org-download nlinum-relative lsp-ui livid-mode kaolin-themes json-mode js2-refactor js-doc ivy-rich iedit htmlize helm-make haskell-mode gruvbox-theme gnuplot git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip eyebrowse evil-surround evil-mc evil-magit evil-escape evil-commentary emmet-mode doom-themes doom-modeline diminish diff-hl dart-mode counsel-projectile counsel-etags company-lsp coffee-mode bind-map auto-compile)))
  '(pdf-view-midnight-colors (cons "#1B2B34" "#D8DEE9"))
  '(vc-annotate-background "#1B2B34")
  '(vc-annotate-color-map

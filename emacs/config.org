@@ -1,0 +1,736 @@
+#+TITLE: index's emacs config
+#+AUTHOR: index
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+
+* Bootstrap
+** Better defaults
+
+   Disable mouse and tooltips:
+
+   #+BEGIN_SRC emacs-lisp
+     (when window-system
+       (blink-cursor-mode 0) ; Disable the cursor blinking
+       (scroll-bar-mode 0)   ; Disable the scroll bar
+       (tool-bar-mode 0)     ; Disable the tool bar
+       (tooltip-mode 0))     ; Disable the tooltips
+   #+END_SRC
+
+   General better defaults:
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default
+      ad-redefinition-action 'accept                   ; Silence warnings for redefinition
+      auto-window-vscroll nil                          ; Lighten vertical scroll
+      confirm-kill-emacs 'yes-or-no-p                  ; Confirm before exiting Emacs
+      cursor-in-non-selected-windows nil               ; Hide the cursor in inactive windows
+      delete-by-moving-to-trash t                      ; Delete files to trash
+      display-time-default-load-average nil            ; Don't display load average
+      display-time-format "%H:%M"                      ; Format the time string
+      fill-column 80                                   ; Set width for automatic line breaks
+      help-window-select t                             ; Focus new help windows when opened
+      indent-tabs-mode nil                             ; Stop using tabs to indent
+      inhibit-startup-screen t                         ; Disable start-up screen
+      initial-scratch-message ""                       ; Empty the initial *scratch* buffer
+      mouse-yank-at-point t                            ; Yank at point rather than pointer
+      ns-use-srgb-colorspace nil                       ; Don't use sRGB colors
+      select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+      sentence-end-double-space nil                    ; End a sentence after a dot and a space
+      show-help-function nil                           ; Disable help messages
+      show-trailing-whitespace nil                     ; Display trailing whitespaces
+      split-height-threshold nil                       ; Disable vertical window splitting
+      split-width-threshold nil                        ; Disable horizontal window splitting
+      tab-width 4                                      ; Set width for tabs
+      uniquify-buffer-name-style 'forward              ; Uniquify buffer names
+      window-combination-resize t                      ; Resize windows proportionally
+      x-stretch-cursor t                               ; Stretch cursor to the glyph width
+      delete-old-versions -1                           ; Delete excess backup versions silently
+      version-control t                                ; Use version control
+      ring-bell-function 'ignore                       ; Silent bell when you make a mistake
+      inhibit-compacting-font-cache t                  ; Faster navigation point (costs more memory)
+      recentf-mode t                                   ; Keep recent files
+      make-backup-files nil                            ; Stop creating backup files
+      vc-follow-symlinks t)                            ; Don't ask for confirmation when opening symlinked file
+     (cd "~/")                                         ; Move to the user directory
+     (delete-selection-mode 1)                         ; Replace region when inserting text
+     (display-time-mode 1)                             ; Enable time in the mode-line
+     (global-auto-revert-mode 1)                       ; Automatically revert a buffer when it changes on disk
+     (fringe-mode 0)                                   ; Disable fringes
+     (fset 'yes-or-no-p 'y-or-n-p)                     ; Replace yes/no prompts with y/n
+     (global-subword-mode 1)                           ; Iterate through CamelCase words
+     (menu-bar-mode 0)                                 ; Disable the menu bar
+     (mouse-avoidance-mode 'banish)                    ; Avoid collision of mouse with point
+     (put 'downcase-region 'disabled nil)              ; Enable downcase-region
+     (put 'upcase-region 'disabled nil)                ; Enable upcase-region
+     (set-default-coding-systems 'utf-8)               ; Default to utf-8 encoding
+   #+END_SRC
+
+   Enable fullscreen.
+
+   #+BEGIN_SRC emacs-lisp
+     (if (eq window-system 'ns)
+         (toggle-frame-maximized)
+       (toggle-frame-fullscreen))
+   #+END_SRC
+
+   Garbage collection on focus-out, Emacs /should/ feel snappier.
+
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'focus-out-hook #'garbage-collect)
+   #+END_SRC
+
+** Load =.custom.el=
+
+   One is able to use the customization interface that is bundled within Emacs. It
+   is meant to help people who are not familiar with Emacs Lisp in the
+   configuration of Emacs itself. By default, changes in the customization will be
+   automatically detected and appended at the end of the configuration file,
+   =init.el=.
+
+   Since that in my case, the actual configuration file is a new one, crafted by
+   =org-mode=, adding code at the end of =init.el= might mess things up. The
+   following tells Emacs to add extra code in another file that would be then
+   loaded, if existing.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+     (when (file-exists-p custom-file)
+       (load custom-file))
+   #+END_SRC
+
+** Automatically update packages
+   
+   Update packages every week and delete the old versions.
+
+   #+begin_src emacs-lisp
+     (use-package auto-package-update
+       :defer t
+       :ensure t
+       :commands update-packages
+       :config
+       (setq auto-package-update-delete-old-versions t)
+       (auto-package-update-maybe))
+   #+end_src
+
+* Font
+
+  #+BEGIN_SRC emacs-lisp
+  (set-default-font "Iosevka 12")
+  #+END_SRC
+  
+** Ligatures
+   
+   Rip off the ligatures from the Fira Code font.
+   
+   #+begin_src emacs-lisp
+     (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
+
+     (defconst fira-code-font-lock-keywords-alist
+       (mapcar (lambda (regex-char-pair)
+                 `(,(car regex-char-pair)
+                   (0 (prog1 ()
+                        (compose-region (match-beginning 1)
+                                        (match-end 1)
+                                        ;; The first argument to concat is a string containing a literal tab
+                                        ,(concat "	" (list (decode-char 'ucs (cadr regex-char-pair)))))))))
+               '(("\\(www\\)"                   #Xe100)
+                 ("[^/]\\(\\*\\*\\)[^/]"        #Xe101)
+                 ("\\(\\*\\*\\*\\)"             #Xe102)
+                 ("\\(\\*\\*/\\)"               #Xe103)
+                 ("\\(\\*>\\)"                  #Xe104)
+                 ("[^*]\\(\\*/\\)"              #Xe105)
+                 ("\\(\\\\\\\\\\)"              #Xe106)
+                 ("\\(\\\\\\\\\\\\\\)"          #Xe107)
+                 ("\\({-\\)"                    #Xe108)
+                 ("\\(!!\\)"                    #Xe10d)
+                 ("\\(!=\\)"                    #Xe10e)
+                 ("\\(!==\\)"                   #Xe10f)
+                 ("\\(-}\\)"                    #Xe110)
+                 ("\\(--\\)"                    #Xe111)
+                 ("\\(---\\)"                   #Xe112)
+                 ("\\(-->\\)"                   #Xe113)
+                 ("[^-]\\(->\\)"                #Xe114)
+                 ("\\(->>\\)"                   #Xe115)
+                 ("\\(-<\\)"                    #Xe116)
+                 ("\\(-<<\\)"                   #Xe117)
+                 ("\\(-~\\)"                    #Xe118)
+                 ("\\(#{\\)"                    #Xe119)
+                 ("\\(#\\[\\)"                  #Xe11a)
+                 ("\\(##\\)"                    #Xe11b)
+                 ("\\(###\\)"                   #Xe11c)
+                 ("\\(####\\)"                  #Xe11d)
+                 ("\\(#(\\)"                    #Xe11e)
+                 ("\\(#\\?\\)"                  #Xe11f)
+                 ("\\(#_\\)"                    #Xe120)
+                 ("\\(#_(\\)"                   #Xe121)
+                 ("\\(\\.=\\)"                  #Xe123)
+                 ("\\(\\?=\\)"                  #Xe127)
+                 ("\\(\\?\\?\\)"                #Xe128)
+                 ("\\(;;\\)"                    #Xe129)
+                 ("\\(/\\*\\)"                  #Xe12a)
+                 ("\\(/\\*\\*\\)"               #Xe12b)
+                 ("\\(/=\\)"                    #Xe12c)
+                 ("\\(/==\\)"                   #Xe12d)
+                 ("\\(/>\\)"                    #Xe12e)
+                 ("\\(//\\)"                    #Xe12f)
+                 ("\\(///\\)"                   #Xe130)
+                 ("\\(&&\\)"                    #Xe131)
+                 ("\\(||\\)"                    #Xe132)
+                 ("\\(||=\\)"                   #Xe133)
+                 ("[^|]\\(|=\\)"                #Xe134)
+                 ("\\(|>\\)"                    #Xe135)
+                 ("\\(\\^=\\)"                  #Xe136)
+                 ("\\(\\$>\\)"                  #Xe137)
+                 ("\\(\\+\\+\\)"                #Xe138)
+                 ("\\(\\+\\+\\+\\)"             #Xe139)
+                 ("\\(\\+>\\)"                  #Xe13a)
+                 ("\\(=:=\\)"                   #Xe13b)
+                 ("[^!/]\\(==\\)[^>]"           #Xe13c)
+                 ("\\(===\\)"                   #Xe13d)
+                 ("\\(==>\\)"                   #Xe13e)
+                 ("[^=]\\(=>\\)"                #Xe13f)
+                 ("\\(=>>\\)"                   #Xe140)
+                 ("\\(<=\\)"                    #Xe141)
+                 ("\\(=<<\\)"                   #Xe142)
+                 ("\\(=/=\\)"                   #Xe143)
+                 ("\\(>-\\)"                    #Xe144)
+                 ("\\(>=\\)"                    #Xe145)
+                 ("\\(>=>\\)"                   #Xe146)
+                 ("[^-=]\\(>>\\)"               #Xe147)
+                 ("\\(>>-\\)"                   #Xe148)
+                 ("\\(>>=\\)"                   #Xe149)
+                 ("\\(>>>\\)"                   #Xe14a)
+                 ("\\(<\\*\\)"                  #Xe14b)
+                 ("\\(<\\*>\\)"                 #Xe14c)
+                 ("\\(<|\\)"                    #Xe14d)
+                 ("\\(<|>\\)"                   #Xe14e)
+                 ("\\(<\\$\\)"                  #Xe14f)
+                 ("\\(<\\$>\\)"                 #Xe150)
+                 ("\\(<!--\\)"                  #Xe151)
+                 ("\\(<-\\)"                    #Xe152)
+                 ("\\(<--\\)"                   #Xe153)
+                 ("\\(<->\\)"                   #Xe154)
+                 ("\\(<\\+\\)"                  #Xe155)
+                 ("\\(<\\+>\\)"                 #Xe156)
+                 ("\\(<=\\)"                    #Xe157)
+                 ("\\(<==\\)"                   #Xe158)
+                 ("\\(<=>\\)"                   #Xe159)
+                 ("\\(<=<\\)"                   #Xe15a)
+                 ("\\(<>\\)"                    #Xe15b)
+                 ("[^-=]\\(<<\\)"               #Xe15c)
+                 ("\\(<<-\\)"                   #Xe15d)
+                 ("\\(<<=\\)"                   #Xe15e)
+                 ("\\(<<<\\)"                   #Xe15f)
+                 ("\\(<~\\)"                    #Xe160)
+                 ("\\(<~~\\)"                   #Xe161)
+                 ("\\(</\\)"                    #Xe162)
+                 ("\\(</>\\)"                   #Xe163)
+                 ("\\(~@\\)"                    #Xe164)
+                 ("\\(~-\\)"                    #Xe165)
+                 ("\\(~=\\)"                    #Xe166)
+                 ("\\(~>\\)"                    #Xe167)
+                 ("[^<]\\(~~\\)"                #Xe168)
+                 ("\\(~~>\\)"                   #Xe169)
+                 ("\\(%%\\)"                    #Xe16a)
+                 ("[^\\+<>]\\(\\+\\)[^\\+<>]"   #Xe16d)
+                 ("[^\\*/<>]\\(\\*\\)[^\\*/<>]" #Xe16f))))
+
+     (defun add-fira-code-symbol-keywords ()
+       (font-lock-add-keywords nil fira-code-font-lock-keywords-alist))
+
+     (add-hook 'prog-mode-hook
+               #'add-fira-code-symbol-keywords)
+   #+end_src
+
+* Themes
+** Kaolin themes
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package kaolin-themes
+       :config
+       (load-theme 'kaolin-bubblegum)
+       (setq kaolin-themes-bold t
+             kaolin-themes-italic t
+             kaolin-themes-underline t
+             kaolin-themes-distinct-company-scrollbar t))
+   #+END_SRC
+  
+** Doom themes
+
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package doom-themes
+     ;;   :ensure t
+     ;;   :config
+     ;;   (load-theme 'doom-nord)
+     ;;   (setq doom-themes-enable-bold t
+     ;;         doom-themes-enable-italic t))
+   #+END_SRC
+
+** All the icons
+
+   Adds fancy icons to emacs.
+
+   #+begin_src emacs-lisp
+     (use-package all-the-icons
+       :ensure t)
+   #+end_src
+
+* Modeline
+** Spaceline
+   
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package spaceline
+     ;;   :ensure t
+     ;;   :init
+     ;;   (progn
+     ;;     (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+     ;;     (setq-default powerline-default-separator 'slant)
+     ;;     ;; (setq spaceline-separator-dir-left '(right . right))
+     ;;     )
+     ;;   :config
+     ;;   (spaceline-emacs-theme)
+     ;;   (setq spaceline-buffer-encoding-abbrev-p nil
+     ;;         spaceline-workspace-number-p t
+     ;;         spaceline-window-numbers-unicode nil
+     ;;         spaceline-version-control-p nil
+     ;;         spaceline-minor-modes-p nil
+     ;;         spaceline-major-mode-p nil
+     ;;         spaceline-buffer-size-p t
+     ;;         spaceline-window-number-p t
+     ;;         spaceline-buffer-id-p t
+     ;;         spaceline-buffer-size-p t)
+     ;;   (powerline-reset))
+   #+END_SRC
+
+** Doom-modeline
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-modeline
+       :ensure t
+       :config
+       (setq doom-modeline-major-mode-icon nil
+             doom-modeline-major-mode-color-icon nil
+             doom-modeline-icon (display-graphic-p)
+             doom-modeline-buffer-modification-icon nil
+             doom-modeline-flycheck-icon nil
+             doom-modeline-checker-simple-format t
+             doom-modeline-buffer-encoding nil)
+       (doom-modeline-mode))
+   #+END_SRC
+
+** Telephone-line
+
+   #+BEGIN_SRC emacs-lisp
+  ;; (use-package telephone-line
+  ;;   :ensure t
+  ;;   :config
+  ;;   (telephone-line-mode))
+   #+END_SRC
+
+* Dashboard
+
+  #+begin_src emacs-lisp
+    (use-package dashboard
+      :ensure t
+      :init
+      (setq dashboard-banner-logo-title "[M E G U M A C S]"
+            dashboard-startup-banner (expand-file-name "banners/megumacs.png" user-emacs-directory)
+            dashboard-footer "EXPLOOOOOOOOOOSIONNN!"
+            dashboard-footer-icon (all-the-icons-wicon "meteor"
+                                                       :height 1.1
+                                                       :v-adjust -0.05
+                                                       :face 'font-lock-keyword-face)
+            dashboard-center-content t
+            dashboard-set-heading-icons t
+            dashboard-set-file-icons t
+            dashboard-set-navigator t)
+      :config
+      (dashboard-setup-startup-hook))
+  #+end_src
+
+* Auto completion
+** Company-mode
+
+  #+begin_src emacs-lisp
+    (use-package company-lsp
+      :ensure t
+      :requires company
+      :commands company-lsp
+      :config
+      (setq company-transformers nil
+            company-lsp-async t
+            company-lsp-cache-candidates nil))
+
+    (use-package company
+      :defer 5
+      :ensure t
+      :init (global-company-mode)
+      :config
+      (add-to-list 'company-backends
+                   '(company-lsp
+                     company-yasnippet
+                     company-capf
+                     company-dabbrev))
+      (setq company-dabbrev-downcase nil
+            company-echo-delay 0
+            company-idle-delay 0.3
+            company-minimum-prefix-length 1
+            company-show-numbers t
+            company-alignip-align-annotations t
+            company-begin-commands '(self-insert-command)))
+  #+end_src
+
+* Evil
+  
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil
+      :ensure t
+      :init
+      (setq evil-want-keybinding nil
+            evil-want-C-u-scroll t)
+      :config
+      (evil-mode 1))
+
+    (use-package evil-escape
+      :ensure t
+      :init
+      (setq-default evil-escape-key-sequence "jk")
+      :config
+      (evil-escape-mode))
+
+    (use-package evil-magit
+      :ensure t
+      :after evil magit
+      :config
+      (evil-magit-init))
+
+    (use-package evil-surround
+      :ensure t
+      :after evil
+      :config
+      (global-evil-surround-mode 1))
+
+    (use-package evil-mc
+      :ensure t
+      :after evil
+      :init
+      (global-evil-mc-mode 1))
+
+    (use-package evil-commentary
+      :ensure t
+      :config
+      (evil-commentary-mode))
+  #+END_SRC
+
+* Keybindings
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package general
+      :ensure t
+      :config
+      (general-evil-setup t)
+      (define-key evil-motion-state-map " " nil)
+      (general-nmap
+        :prefix "<SPC>"
+        ;; Misc
+        "SPC" 'counsel-M-x
+        "TAB" 'mode-line-other-buffer
+        "." 'xref-find-definitions
+        "," 'xref-pop-marker-stack
+        "'" 'eshell
+        "qq" 'evil-quit
+        "s" 'swiper
+        ;; Applications
+        "a" '(nil :which-key "applications")
+        "au" 'undo-tree-visualize
+        "aU" 'update-packages
+        ;; Buffers
+        "b" '(nil :which-key "buffers")
+        "bb" 'counsel-switch-buffer
+        "bd" 'kill-this-buffer
+        "bp" 'previous-buffer
+        "bn" 'next-buffer
+        ;; Files
+        "f" '(nil :which-key "file")
+        "ff" 'find-file
+        "fr" 'counsel-recentf
+        "fs" 'save-buffer
+        "fS" 'evil-write-all
+        ;; LSP
+        "l" '(nil :which-key "language")
+        ;; Projects
+        "p" '(nil :which-key "project")
+        ;; Toggles
+        "t" '(nil :which-key "toggles")
+        "tn" 'nlinum-mode
+        "tL" 'visual-line-mode
+        ;; Themes
+        "T" '(nil :which-key "themes")
+        "Ts" 'counsel-load-theme
+        ;; Windows
+        "w" '(nil :which-key "window")
+        "wm" 'delete-other-windows
+        "wf" 'delete-other-windows
+        "wj" 'evil-window-down
+        "wk" 'evil-window-up
+        "wl" 'evil-window-right
+        "wh" 'evil-window-left
+        "ws" 'evil-window-split
+        "wv" 'evil-window-vsplit
+        "wd" 'evil-window-delete
+        "wc" 'evil-window-delete
+        "wH" 'evil-window-move-far-left
+        "wL" 'evil-window-move-far-right
+        "wK" 'evil-window-move-very-top
+        "wJ" 'evil-window-move-very-bottom
+        "w=" 'balance-windows))
+  #+END_SRC
+
+** Which-key
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package which-key
+      :defer 5
+      :ensure t
+      :config
+      (which-key-mode))
+  #+END_SRC
+
+* Source Control
+** Magit
+
+   General source control package. Has a nice interface for every git operation there is.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :ensure t
+       :general
+       (nmap
+         :prefix "<SPC>"
+         "g" '(nil :which-key "magit")
+         "gs" 'magit-status
+         "gb" 'magit-blame))
+   #+END_SRC
+
+** Git Gutter
+
+   Commit diff and other repo informations. Has the capability to stage hunks and what-not.
+   
+   #+BEGIN_SRC emacs-lisp
+  (use-package git-gutter-fringe+
+    :ensure t
+    :config
+    (git-gutter-fr+-minimal)
+    (setq git-gutter-fr+-side 'left-fringe))
+   #+END_SRC
+
+* File management
+** Ranger
+
+   #+BEGIN_SRC emacs-lisp
+  (use-package ranger
+    :ensure t
+    :defer t
+    :general
+    (nmap
+    :prefix "SPC"
+    "ar" 'ranger
+    "ad" 'deer)
+    :config
+    (ranger-override-dired-mode t))
+   #+END_SRC
+
+* Project Management
+** Treemacs
+  #+BEGIN_SRC emacs-lisp
+    (use-package treemacs
+      :ensure t
+      :defer t
+      :general
+      (nmap
+        :prefix "<SPC>"
+        "tt" 'treemacs)
+      :config
+      (setq treemacs-no-png-images t
+            treemacs-width 25))
+  #+END_SRC
+
+** Projectile
+   
+   #+begin_src emacs-lisp
+     (use-package projectile
+       :ensure t
+       :defer t
+       :config
+       (projectile-mode)
+       (setq projectile-enable-caching t))
+
+     (use-package counsel-projectile
+       :ensure t
+       :general
+       (nmap
+         :prefix "<SPC>"
+         "pp" 'counsel-projectile-switch-project
+         "pf" 'counsel-projectile-find-file
+         "ps" 'counsel-projectile-git-grep
+         "pd" 'counsel-projectile-find-dir))
+   #+end_src
+   
+* Flycheck
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :hook (prog-mode . flycheck-mode))
+  #+END_SRC
+
+* Language modes
+** Rust
+  #+begin_src emacs-lisp
+    (use-package rust-mode
+      :ensure t)
+  #+end_src
+
+** Ruby
+   
+   #+begin_src emacs-lisp
+     (use-package ruby-mode
+       :ensure t)
+   #+end_src
+
+** Javascript
+   
+   #+begin_src emacs-lisp
+     (use-package js2-mode
+       :ensure t)
+
+     (use-package rjsx-mode
+       :ensure t)
+   #+end_src
+
+** Web
+   
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t)
+#+end_src
+
+* LSP
+
+  #+begin_src emacs-lisp
+    (use-package lsp-mode
+      :ensure t
+      :general
+      (nmap
+        :prefix "<SPC>"
+        "lF" 'lsp-format-buffer
+        "lR" 'lsp-rename)
+      :hook ((js2-mode        . lsp-deferred)
+             (js-mode         . lsp-deferred)
+             (rjsx-mode       . lsp-deferred)
+             (typescript-mode . lsp-deferred)
+             (rust-mode       . lsp-deferred)
+             (ruby-mode       . lsp-deferred))
+      :commands (lsp lsp-deferred))
+
+    (use-package lsp-ui
+      :ensure t
+      :after lsp-mode
+      :commands lsp-ui-mode
+      :hook (lsp-mode . lsp-ui-mode)
+      :general
+      (nmap
+        :prefix "<SPC>"
+        "li" 'lsp-ui-peek-find-implementation
+        "lr" 'lsp-ui-peek-find-references
+        "ld" 'lsp-ui-peek-find-definitions
+        "ll" 'lsp-ui-flycheck-list
+        "la" 'lsp-ui-sideline-apply-code-actions)
+      :config
+      (setq lsp-ui-doc-enable t
+            lsp-ui-sideline-enable t
+            lsp-ui-flycheck-enable t
+            lsp-ui-flycheck-live-reporting t
+            lsp-ui-sideline-toggle-symbols-info t
+            lsp-ui-sideline-show-hover t
+            lsp-ui-peek-enable t))
+  #+end_src
+
+* Buffers and Windows
+** Winum
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package winum
+       :ensure t
+       :init
+       (setq winum-auto-setup-mode-line nil)
+       :config
+       (winum-mode))
+   #+END_SRC
+
+** Relative numbers
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package nlinum-relative
+    :ensure t
+    :config
+    (nlinum-relative-setup-evil)
+    (setq nlinum-relative-redisplay-delay 0)
+    (add-hook 'prog-mode-hook 'nlinum-relative-mode))
+  #+END_SRC
+  
+** Eyebrowse
+
+#+begin_src emacs-lisp
+  (use-package eyebrowse
+    :ensure t
+    :config
+    (eyebrowse-mode)
+    (eyebrowse-setup-opinionated-keys))
+#+end_src
+
+* Ivy
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ivy
+      :ensure t
+      :general
+      (nmap
+        :prefix "<SPC>"
+        ";" 'avy-goto-word-1
+        ":" 'avy-goto-char)
+      :config
+      (global-set-key "\C-s" 'swiper)
+      (setq ivy-count-format "(%d/%d) "
+            avy-background t)
+      (ivy-mode))
+
+    (use-package ivy-rich
+      :ensure t
+      :after ivy
+      :init
+      (ivy-rich-mode 1)
+      :config
+      (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+  #+END_SRC
+
+** Ivy/Counsel
+
+  #+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t)
+  #+END_SRC
+
+* Yasnippets
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package yasnippet
+      :ensure t
+      :init
+      (yas-global-mode 1)
+      :config
+      (setq yas-prompt-functions 'yas-ido-prompt))
+
+    (use-package yasnippet-snippets
+      :after yasnippet
+      :ensure t)
+  #+END_SRC

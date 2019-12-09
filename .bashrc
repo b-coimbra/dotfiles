@@ -12,12 +12,13 @@ alias c='clear'
 alias q='exit'
 alias r='ranger'
 alias v='vim'
+alias vi='vim'
 alias ls='ls --color=auto'
 alias fzf="fzf --preview 'cat {}'"
 alias empty-trash="rm -r ~/.trash/*"
 
-# keyboard layout
-# setxkbmap -model abnt2 -layout br -variant abnt2
+# toggle keyboard layout
+setxkbmap -model abnt2 -layout us,br -variant abnt2 -option grp:win_space_toggle
 
 # editing style
 set -o emacs
