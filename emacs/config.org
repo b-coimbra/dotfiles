@@ -1,6 +1,17 @@
-#+TITLE: index's emacs config
+#+TITLE: MEGUMACS
 #+AUTHOR: index
+#+STARTUP: inlineimages
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+
+[[./banners/megumacs.png]]
+
+#+begin_quote
+Detonation... Detonation... Detonation... Wielder of the most glorious, powerful, and grand explosion magic, My name is Megumin. The blow that I am given to strike turns a blind eye to the fate of my kindred, rendering all hope of rebirth and anguish, and the model by which all forces are judged! Pitiful creature... Synchronize yourself with the red smoke, and atone in a surge of blood!
+#+end_quote
+
+#+begin_quote
+Crimson-black blaze, king of myriad worlds, though I promulgate the laws of nature, I am the alias of destruction incarnate in accordance with the principles of creation. Let the hammer of eternity descend unto me! ... Burn to ashes within the crimson.
+#+end_quote
 
 * Bootstrap
 ** Better defaults
@@ -112,6 +123,9 @@
    #+end_src
 
 * Font
+
+  - [[https://github.com/be5invis/Iosevka][Iosevka]]
+  - [[https://github.com/belluzj/fantasque-sans][Fantasque Sans]]
 
   #+BEGIN_SRC emacs-lisp
   (set-default-font "Iosevka 12")
@@ -242,7 +256,9 @@
    #+end_src
 
 * Themes
-** Kaolin themes
+** [[https://github.com/ogdenwebb/emacs-kaolin-themes][Kaolin themes]]
+   
+   Set of eye pleasing themes for GNU Emacs. Supports both GUI and terminal.
 
    #+BEGIN_SRC emacs-lisp
      (use-package kaolin-themes
@@ -254,7 +270,9 @@
              kaolin-themes-distinct-company-scrollbar t))
    #+END_SRC
   
-** Doom themes
+** [[https://github.com/hlissner/emacs-doom-themes][Doom themes]]
+   
+  An opinionated pack of modern color-themes 
 
    #+BEGIN_SRC emacs-lisp
      ;; (use-package doom-themes
@@ -265,7 +283,7 @@
      ;;         doom-themes-enable-italic t))
    #+END_SRC
 
-** All the icons
+** [[https://github.com/domtronn/all-the-icons.el][All the icons]]
 
    Adds fancy icons to emacs.
 
@@ -275,7 +293,9 @@
    #+end_src
 
 * Modeline
-** Spaceline
+** [[https://github.com/TheBB/spaceline][Spaceline]]
+   
+   Powerline theme from Spacemacs.
    
    #+BEGIN_SRC emacs-lisp
      ;; (use-package spaceline
@@ -301,7 +321,9 @@
      ;;   (powerline-reset))
    #+END_SRC
 
-** Doom-modeline
+** [[https://github.com/seagle0128/doom-modeline][Doom-modeline]]
+   
+   A fancy and fast mode-line inpsired by minimalism design.
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-modeline
@@ -317,16 +339,10 @@
        (doom-modeline-mode))
    #+END_SRC
 
-** Telephone-line
-
-   #+BEGIN_SRC emacs-lisp
-  ;; (use-package telephone-line
-  ;;   :ensure t
-  ;;   :config
-  ;;   (telephone-line-mode))
-   #+END_SRC
-
 * Dashboard
+** [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]]
+   
+   An extensible emacs startup screen showing you what’s most important.
 
   #+begin_src emacs-lisp
     (use-package dashboard
@@ -348,18 +364,11 @@
   #+end_src
 
 * Auto completion
-** Company-mode
+** [[https://github.com/company-mode/company-mode][Company]]
+   
+   Modular in-buffer completion framework.
 
   #+begin_src emacs-lisp
-    (use-package company-lsp
-      :ensure t
-      :requires company
-      :commands company-lsp
-      :config
-      (setq company-transformers nil
-            company-lsp-async t
-            company-lsp-cache-candidates nil))
-
     (use-package company
       :defer 5
       :ensure t
@@ -378,9 +387,30 @@
             company-alignip-align-annotations t
             company-begin-commands '(self-insert-command)))
   #+end_src
+   
+** [[https://github.com/tigersoldier/company-lsp][Company/lsp]]
+   
+   Company completion backend for =lsp-mode=
+   
+   #+begin_src emacs-lisp
+    (use-package company-lsp
+      :ensure t
+      :requires company
+      :commands company-lsp
+      :config
+      (setq company-transformers nil
+            company-lsp-async t
+            company-lsp-cache-candidates nil))
+   #+end_src
 
 * Evil
+
+  Evil is an extensible vi layer for Emacs. It emulates the main features of Vim, and provides facilities for writing custom extensions.
   
+** [[https://github.com/emacs-evil/evil][evil-mode]]
+   
+   Base package for =evil-mode=
+
   #+BEGIN_SRC emacs-lisp
     (use-package evil
       :ensure t
@@ -389,48 +419,76 @@
             evil-want-C-u-scroll t)
       :config
       (evil-mode 1))
+  #+END_SRC
+  
+** [[https://github.com/syl20bnr/evil-escape][evil-escape]]
 
+   Unfortunately we need a separate package to handle custom <ESC> key sequences.
+   #+begin_src emacs-lisp
     (use-package evil-escape
       :ensure t
       :init
       (setq-default evil-escape-key-sequence "jk")
       :config
       (evil-escape-mode))
+   #+end_src
+  
+** [[https://github.com/emacs-evil/evil-magit][evil-magit]]
 
+   Evil keybinding integration in magit.
+   #+begin_src emacs-lisp
     (use-package evil-magit
       :ensure t
       :after evil magit
       :config
       (evil-magit-init))
+   #+end_src
 
+** [[https://github.com/emacs-evil/evil-surround][evil-surround]]
+
+   Useful package for adding, editing or removing all types of surrounding characters (even HTML tags!).
+   #+begin_src emacs-lisp
     (use-package evil-surround
       :ensure t
       :after evil
       :config
       (global-evil-surround-mode 1))
+   #+end_src
+  
+** [[https://github.com/gabesoft/evil-mc][evil-mc]]
 
+   Multiple cursors implementation for evil-mode.
+   #+begin_src emacs-lisp
     (use-package evil-mc
       :ensure t
       :after evil
       :init
       (global-evil-mc-mode 1))
-
+   #+end_src
+  
+** [[https://github.com/linktohack/evil-commentary][evil-commentary]]
+  
+   Evil bindings for commenting out chunks of code. 
+   #+begin_src emacs-lisp
     (use-package evil-commentary
       :ensure t
       :config
       (evil-commentary-mode))
-  #+END_SRC
-
+   #+end_src
+    
 * Keybindings
+** [[https://github.com/noctuid/general.el][General]]
+   
+   More convenient key definitions.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package general
       :ensure t
       :config
       (general-evil-setup t)
       (define-key evil-motion-state-map " " nil)
-      (general-nmap
-        :prefix "<SPC>"
+      (general-evil-define-key 'normal 'global
+        :prefix "SPC"
         ;; Misc
         "SPC" 'counsel-M-x
         "TAB" 'mode-line-other-buffer
@@ -440,34 +498,42 @@
         "qq" 'evil-quit
         "s" 'swiper
         ;; Applications
-        "a" '(nil :which-key "applications")
+        "a" '(:ignore t :which-key "applications")
         "au" 'undo-tree-visualize
         "aU" 'update-packages
         ;; Buffers
-        "b" '(nil :which-key "buffers")
+        "b" '(:ignore t :which-key "buffers")
         "bb" 'counsel-switch-buffer
         "bd" 'kill-this-buffer
         "bp" 'previous-buffer
         "bn" 'next-buffer
+        "be" 'erase-buffer
+        ;; Compiling
+        "c" 'compile
+        ;; Errors
+        "e" '(:ignore t :which-key "errors")
         ;; Files
-        "f" '(nil :which-key "file")
+        "f" '(:ignore t :which-key "file")
         "ff" 'find-file
         "fr" 'counsel-recentf
         "fs" 'save-buffer
         "fS" 'evil-write-all
+        "fR" 'rename-file
+        "fb" 'ranger-show-bookmarks
         ;; LSP
-        "l" '(nil :which-key "language")
+        "l" '(:ignore t :which-key "language")
         ;; Projects
-        "p" '(nil :which-key "project")
+        "p" '(:ignore t :which-key "project")
         ;; Toggles
-        "t" '(nil :which-key "toggles")
+        "t" '(:ignore t :which-key "toggles")
         "tn" 'nlinum-mode
         "tL" 'visual-line-mode
+        "tu" 'lsp-ui-mode
         ;; Themes
-        "T" '(nil :which-key "themes")
+        "T" '(:ignore t :which-key "themes")
         "Ts" 'counsel-load-theme
         ;; Windows
-        "w" '(nil :which-key "window")
+        "w" '(:ignore t :which-key "window")
         "wm" 'delete-other-windows
         "wf" 'delete-other-windows
         "wj" 'evil-window-down
@@ -483,20 +549,22 @@
         "wK" 'evil-window-move-very-top
         "wJ" 'evil-window-move-very-bottom
         "w=" 'balance-windows))
-  #+END_SRC
+   #+END_SRC
 
-** Which-key
+** [[https://github.com/justbur/emacs-which-key][Which-key]]
+   
+   Package that displays available keybindings in a popup.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package which-key
       :defer 5
       :ensure t
       :config
       (which-key-mode))
-  #+END_SRC
+   #+END_SRC
 
 * Source Control
-** Magit
+** [[https://github.com/magit/magit][Magit]]
 
    General source control package. Has a nice interface for every git operation there is.
 
@@ -511,7 +579,7 @@
          "gb" 'magit-blame))
    #+END_SRC
 
-** Git Gutter
+** [[https://github.com/syohex/emacs-git-gutter-fringe][Git Gutter]]
 
    Commit diff and other repo informations. Has the capability to stage hunks and what-not.
    
@@ -524,7 +592,9 @@
    #+END_SRC
 
 * File management
-** Ranger
+** [[https://github.com/ralesi/ranger.el][Ranger]]
+   
+   Bringing the goodness of ranger to dired!
 
    #+BEGIN_SRC emacs-lisp
   (use-package ranger
@@ -540,8 +610,11 @@
    #+END_SRC
 
 * Project Management
-** Treemacs
-  #+BEGIN_SRC emacs-lisp
+** [[https://github.com/Alexander-Miller/treemacs][Treemacs]]
+
+   A tree layout file explorer.
+
+   #+BEGIN_SRC emacs-lisp
     (use-package treemacs
       :ensure t
       :defer t
@@ -552,9 +625,11 @@
       :config
       (setq treemacs-no-png-images t
             treemacs-width 25))
-  #+END_SRC
+   #+END_SRC
 
-** Projectile
+** [[https://github.com/bbatsov/projectile][Projectile]]
+   
+   Project interaction library.
    
    #+begin_src emacs-lisp
      (use-package projectile
@@ -563,7 +638,13 @@
        :config
        (projectile-mode)
        (setq projectile-enable-caching t))
+   #+end_src
+   
+*** [[https://github.com/ericdanan/counsel-projectile][projectile/counsel]]
+    
+    =ivy= UI for Projectile.
 
+    #+begin_src emacs-lisp
      (use-package counsel-projectile
        :ensure t
        :general
@@ -573,22 +654,31 @@
          "pf" 'counsel-projectile-find-file
          "ps" 'counsel-projectile-git-grep
          "pd" 'counsel-projectile-find-dir))
-   #+end_src
+    #+end_src
    
-* Flycheck
+* Syntax Checking
+** [[https://github.com/flycheck/flycheck][Flycheck]]
+   
+   Modern on-the-fly syntax checking extension.
 
-  #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :hook (prog-mode . flycheck-mode))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+    (use-package flycheck
+      :ensure t
+      :hook (prog-mode . flycheck-mode)
+      :general
+      (nmap
+        :prefix "<SPC>"
+        "en" 'flycheck-next-error
+        "ep" 'flycheck-previous-error))
+   #+END_SRC
 
 * Language modes
-** Rust
-  #+begin_src emacs-lisp
+** [[https://github.com/rust-lang/rust-mode][Rust]]
+
+   #+begin_src emacs-lisp
     (use-package rust-mode
       :ensure t)
-  #+end_src
+   #+end_src
 
 ** Ruby
    
@@ -598,25 +688,45 @@
    #+end_src
 
 ** Javascript
-   
-   #+begin_src emacs-lisp
+*** [[https://github.com/mooz/js2-mode][js2-mode]]
+    
+    Improved Javascript editing mode.
+    
+    #+begin_src emacs-lisp
      (use-package js2-mode
-       :ensure t)
+       :ensure t
+       :init
+       (setq-default js-indent-level 2
+                     js2-basic-offset 2))
+    #+end_src
+   
+*** [[https://github.com/felipeochoa/rjsx-mode][rjsx-mode]]
+    
+    A JSX major mode.
 
+    #+begin_src emacs-lisp
      (use-package rjsx-mode
        :ensure t)
+    #+end_src
+
+** [[https://github.com/fxbois/web-mode][Web]]
+   
+   Web template editing mode.
+   
+   #+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+    (setq web-mode-code-indent-offset 2
+          web-mode-markup-indent-offset 2))
    #+end_src
 
-** Web
-   
-#+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t)
-#+end_src
+* Language Server Protocol
+** [[https://github.com/emacs-lsp/lsp-mode][LSP]]
 
-* LSP
+   =lsp-mode= aims to provide IDE-like experience by providing optional integration with the most popular Emacs packages like =company=, =flycheck= and =projectile=.
 
-  #+begin_src emacs-lisp
+   #+begin_src emacs-lisp
     (use-package lsp-mode
       :ensure t
       :general
@@ -631,7 +741,13 @@
              (rust-mode       . lsp-deferred)
              (ruby-mode       . lsp-deferred))
       :commands (lsp lsp-deferred))
-
+   #+end_src
+   
+*** [[https://github.com/emacs-lsp/lsp-ui][LSP-UI]]
+    
+    Higher level UI modules of =lsp-mode=.
+   
+   #+begin_src emacs-lisp
     (use-package lsp-ui
       :ensure t
       :after lsp-mode
@@ -653,10 +769,12 @@
             lsp-ui-sideline-toggle-symbols-info t
             lsp-ui-sideline-show-hover t
             lsp-ui-peek-enable t))
-  #+end_src
+   #+end_src
 
 * Buffers and Windows
-** Winum
+** [[https://github.com/deb0ch/emacs-winum][Winum]]
+   
+   Numbering for buffers, windows and =eyebrowse= workspaces.
 
    #+BEGIN_SRC emacs-lisp
      (use-package winum
@@ -667,30 +785,38 @@
        (winum-mode))
    #+END_SRC
 
-** Relative numbers
+** [[https://github.com/xcodebuild/nlinum-relative][Relative numbers]]
+   
+   Relative line numbers.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package nlinum-relative
     :ensure t
     :config
     (nlinum-relative-setup-evil)
     (setq nlinum-relative-redisplay-delay 0)
     (add-hook 'prog-mode-hook 'nlinum-relative-mode))
-  #+END_SRC
+   #+END_SRC
   
-** Eyebrowse
+** [[https://github.com/wasamasa/eyebrowse][Eyebrowse]]
+   
+   A simple-minded way of managing window configs in emacs.
 
-#+begin_src emacs-lisp
+   #+begin_src emacs-lisp
   (use-package eyebrowse
     :ensure t
+    :general
     :config
     (eyebrowse-mode)
     (eyebrowse-setup-opinionated-keys))
-#+end_src
+   #+end_src
 
-* Ivy
+* Navigation
+** [[https://github.com/abo-abo/swiper][Ivy]]
+   
+   =avy= is similar to Vim's easymotion plugin, it provides commands for jumping to visible text using a char-based decision tree.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package ivy
       :ensure t
       :general
@@ -711,26 +837,37 @@
       (ivy-rich-mode 1)
       :config
       (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
-  #+END_SRC
+   #+END_SRC
 
-** Ivy/Counsel
+** [[https://github.com/abo-abo/swiper][Ivy/Counsel]]
+   
+   Completion frontend for things such as =M-x find-file=. 
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package counsel
     :ensure t)
-  #+END_SRC
+   #+END_SRC
 
-* Yasnippets
+* Templates
+** [[https://github.com/joaotavora/yasnippet][Yasnippet]]
+   
+   A snippet template system.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package yasnippet
       :ensure t
       :init
       (yas-global-mode 1)
       :config
       (setq yas-prompt-functions 'yas-ido-prompt))
+   #+END_SRC
 
+*** [[https://github.com/AndreaCrotti/yasnippet-snippets][Yasnippet/snippets]]
+    
+    A collection of =yasnippet= snippets for many languages
+
+    #+begin_src emacs-lisp
     (use-package yasnippet-snippets
       :after yasnippet
       :ensure t)
-  #+END_SRC
+    #+end_src
