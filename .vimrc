@@ -8,13 +8,16 @@ set number relativenumber
 set nocompatible
 set bs=indent,eol,start
 set ai
+set shiftwidth=4
+set tabstop=4
+set clipboard=unnamedplus
 
 imap jk <ESC>
 
 syntax on
 filetype plugin indent on
 
-colorscheme koehler
+colorscheme desert
 
 " Vim-airline
 let g:airline_powerline_fonts = 1

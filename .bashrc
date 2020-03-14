@@ -36,3 +36,7 @@ cat ~/.cache/wal/sequences
 
 # To add support for TTYs this line can be optionally added.
 source ~/.cache/wal/colors-tty.sh
+
+# Remove dotnet telemetry
+
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
