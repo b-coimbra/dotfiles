@@ -23,3 +23,8 @@ alias setup-wacom="sh ~/Documents/dotfiles/scripts/wacom.sh"
 # Disable dotnet telemetry
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+# Editor
+
+export VISUAL=nvim
+export EDITOR=nvim

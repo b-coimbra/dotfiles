@@ -4,7 +4,8 @@
 !###############
 
 URxvt.depth:                32
-URxvt.geometry:             90x30
+URxvt.geometry:             92x24
+! URxvt.geometry:             90x30
 URxvt.loginShell:           true
 URxvt.internalBorder:       15
 URxvt.lineSpace:            0

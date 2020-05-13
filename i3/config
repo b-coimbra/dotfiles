@@ -192,12 +192,15 @@ set $bg     #1d1f21
 set $pink   #ff79c6
 set $secon  #383838
 set $grey   #8c8c8c
+set $terminalbg #282828
 
 # class                 border  backgr. text    indic.  child_border
 client.focused          $secon  $secon  $white  $secon  $grey
 client.unfocused        $bg     $bg     $white  $bg     $bg
 client.focused_inactive $bg     $bg     $white  $bg     $bg
 client.urgent           $pink   $pink   $white  $pink   $pink
+
+client.background $terminalbg
 
 # border size
 for_window [class=".*"] border pixel 1
