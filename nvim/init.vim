@@ -6,5 +6,6 @@ source $HOME/.config/nvim/plug-config/coc.vim
 source $HOME/.config/nvim/plug-config/ncm2.vim
 source $HOME/.config/nvim/plug-config/airline.vim
 source $HOME/.config/nvim/plug-config/nerd-commenter.vim
+source $HOME/.config/nvim/plug-config/vim-easymotion.vim
 
 source $HOME/.config/nvim/themes/gruvbox.vim
