@@ -1,4 +1,2 @@
 " I hate escape more than anything else
 inoremap jk <Esc>
-" inoremap kj <Esc>
-
