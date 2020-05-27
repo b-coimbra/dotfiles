@@ -1,0 +1,288 @@
+/* FULL WIDTH TABS */
+#tabs-container.top .tab-strip {
+	display: flex !important;
+}
+
+#tabs-container.top .tab-strip span:not(.favicon):not(.close) {
+	flex: 1 1 0 !important;
+	display: flex !important;
+}
+
+#tabs-container.top .tab-position {
+	flex: 1 1 0 !important;
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+	height: 30px !important;
+}
+
+#tabs-container.top .tab-position .tab .favicon,
+#tabs-container.top .tab-position .tab .close {
+	flex: 0 0 18px !important;
+}
+
+#tabs-container.top .newtab {
+	position: relative !important;
+	left: auto !important;
+	top: auto !important;
+}
+/* FULL WIDTH TABS */
+
+#tabs-container .tab.isdiscarded {
+	opacity: .7;
+}
+
+.progress-indicator {
+	bottom: 0px !important;
+	left: 0 !important;
+	width: 100%;
+	background-color: #fff !important;
+}
+
+/* TABS CUSTOMIZATION */
+
+.win #tabs-container.top {
+	padding: 0 !important;
+}
+
+.tab-strip {
+	counter-reset: tabs;
+	overflow: hidden;
+}
+
+.tab-position .tab.marked:after {
+	width: 100%;
+	height: 14px;
+}
+
+.tab::after {
+	content: counter(tabs) !important;
+	counter-increment: tabs !important;
+	background: #3e3e3e !important;
+	left: 0 !important;
+	position: absolute !important;
+	color: #fff !important;
+	font-size: 10px !important;
+	height: 100% !important;
+	display: flex !important;
+	align-items: center !important;
+	width: 11px !important;
+	justify-content: center !important;
+	-webkit-mask-image: none !important;
+}
+
+.tab.active::after {
+	background: #fff !important;
+	color: #000 !important;
+}
+
+.tab.pinned::after {
+	content: "✦";
+	background: #b12360 !important;
+}
+
+.tab-audio {
+	height: 20px !important;
+	display: flex;
+	width: 14px !important;
+	align-items: center;
+	justify-content: center;
+	z-index: 1;
+	left: 10px;
+	top: 0;
+}
+
+.tab-position .tab.audio-on .title {
+	margin-left: 15px;
+}
+
+.tab-audio canvas {
+	transform-origin: unset !important;
+}
+
+.tab-audio canvas {
+	opacity: 1 !important;
+}
+
+.button-tabbar.newtab {
+	display: none !important;
+}
+
+#tabs-container {
+	height: 20px !important;
+	padding: 0 !important;
+}
+
+#header {
+	min-height: 20px !important;
+}
+
+.tab-position .tab .title {
+	font: 500 11px 'Roboto', sans-serif !important;
+	margin-left: 10px;
+	margin-top: -7px;
+	height: 20px;
+}
+
+.tab-indicator.active {
+	background-color: #fff !important;
+}
+
+.tab-group-indicator {
+	top: -4px !important;
+}
+
+.tab-indicator {
+	background-color: grey !important;
+}
+
+.tab-position .tab .tab-header {
+	flex: initial !important;
+	padding: 6px 0 6px 6px !important;
+}
+
+.favicon, .window-buttongroup {
+	display: none !important;
+}
+
+.tab .button-badge {
+	top: 0 !important;
+	right: 0 !important;
+	left: unset !important;
+	min-width: 11px !important;
+	height: 11px !important;
+	min-height: 15px !important;
+	width: 11px !important;
+	width: 5px !important;
+	height: 100% !important;
+	border-radius: 0 !important;
+	background: rgb(27, 175, 151) !important;
+	color: #fff;
+	font-weight: 500 !important;
+	font-size: 13px !important;
+	font-family: 'Roboto', sans-serif;
+	line-height: 1px;
+}
+
+.tabs-top .tab-position .tab, .tabs-bottom .tab-position .tab {
+	margin-right: 0 !important;
+}
+
+.tab-position .tab {
+	background: #1b1b1b !important;
+}
+
+.tab-position .tab.active {
+	background: #000 !important;
+}
+
+.tab-position .tab .close {
+	margin-top: -5px;
+}
+
+.address-off #tabs-container.top {
+	border-bottom-width: 0 !important;
+}
+
+#panels .webpanel-stack .webpanel .webpanel-header .toolbar { margin-right: 0 !important }
+
+#header .toolbar {
+	display: none !important;
+}
+
+.addressfield .private-window-indicator {
+	fill: #fff;
+}
+
+.private .toolbar-addressbar .addressfield,
+.private .toolbar-addressbar .searchfield {
+	color: #fff !important;
+	background-color: #000 !important;
+	border-color: #000 !important;
+}
+
+.private .toolbar-addressbar .addressfield svg,
+.private .toolbar-addressbar .searchfield svg {
+	fill: #389a2a !important;
+}
+
+.private .input-dropdown:hover:not(:disabled) svg,
+.private .button-addressfield.bookmark:hover svg .bookmark-outline,
+.button-addressfield.reader-mode:hover svg {
+	fill: rgba(0, 0, 0, .7) !important;
+}
+
+button.button-addressfield:hover { border-color: transparent !important }
+
+button.button-addressfield:not(.private):hover { background-color: unset !important }
+
+button.button-addressfield:not(.private):hover .bookmark.bookmarked svg .bookmark-outline,
+.button-addressfield.bookmark:hover svg .bookmark-outline {
+	fill: var(--colorFg) !important;
+}
+
+#app { counter-reset: i }
+
+.extensions-wrapper button:not(.toggle-extensions-group)::after {
+	content: counter(i, hiragana);
+	counter-increment: i;
+	font-size: 16pt;
+	font-weight: 600;
+	width: 10px;
+	position: absolute;
+	height: 30px;
+	color: grey;
+	z-index: -1;
+	display: block;
+	transition: all .1s;
+}
+
+.extensions-wrapper button:not(.toggle-extensions-group):hover::after { color: #fff }
+
+.toolbar-addressbar .button-toolbar.browserAction-button, .toolbar-mailbar .button-toolbar.browserAction-button { background-color: unset !important }
+
+.toolbar-addressbar .button-toolbar.browserAction-button img, .toolbar-mailbar .button-toolbar.browserAction-button img { display: none !important }
+
+.favicon { background-color: unset !important }
+
+.win #tabs-container.top { padding-left: 0 !important }
+
+.win10 .vivaldi,#tabs-container .trash { display:none !important }
+
+.button-addressfield.bookmark.bookmarked svg .bookmark-outline { fill:rgba(255,255,255,.6) }
+
+#header #titlebar .window-buttongroup button.window-close:hover { background-color:hsla(0,0%,100%,.1) !important }
+
+#header #titlebar .window-buttongroup button:last-child:hover svg {
+	border: 2px solid red !important;
+	background: red !important;
+}
+
+#browser.win, #browser.win + div, #browser.win + div + div, #browser.win button, #browser.win input, #browser.win select, #browser.win textarea {
+	font-weight: 500 !important;
+}
+
+#browser.win input {
+	font-family: 'Roboto', sans-serif !important;
+	letter-spacing: .4px;
+}
+
+#header #titlebar .window-buttongroup button svg {
+	border-radius: 50%;
+	background: none;
+	fill: none;
+	width: 10px;
+	height: 10px;
+	border: 2px solid #bbb;
+}
+
+#header #titlebar .window-buttongroup button:hover svg {
+	border: 2px solid #fff;
+	background: #fff;
+}
+
+#titlebar {
+	display: none;
+}
+
+.addressfield form input.url::placeholder { color: transparent !important }
