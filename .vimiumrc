@@ -1,0 +1,8 @@
+unmap s
+
+map e scrollPageUp
+map R nextTab
+map E previousTab
+map s scrollDown
+map w scrollUp
+map t Vomnibar.activateInNewTab

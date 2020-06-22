@@ -28,3 +28,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 export VISUAL=nvim
 export EDITOR=nvim
+
+# Path
+export DENO_INSTALL="/home/nexi/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"

@@ -1,0 +1,18 @@
+set sortlinkhints
+set cncpcompletion
+set searchengine "https://www.qwant.com/?q=%s"
+set autohidecursor
+
+site '*://*.4chan.org/*' {
+	unmap t
+	unmap r
+	unmap g
+}
+
+site '*://danbooru.donmai.us/*' {
+	unmap v
+}
+
+let hintcharacters="asdfqwer"
+let typelinkhintsdelay=0
+let blacklists = ["https://onedrive.live.com/*","https://www.draw.io/*"]

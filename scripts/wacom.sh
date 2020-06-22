@@ -8,5 +8,6 @@
 
 ## HDMI-2 configuration
 xsetwacom set "Wacom Intuos S Pen stylus" MapToOutput HDMI-2
-xsetwacom set "Wacom Intuos S Pen stylus" Area 0 4600 7360 9200
+# xsetwacom set "Wacom Intuos S Pen stylus" Area 0 4600 7360 9200
+xsetwacom set "Wacom Intuos S Pen stylus" Area 0 3300 9000 9200
 xsetwacom set "Wacom Intuos S Pen stylus" PressureCurve 0 0 100 100
