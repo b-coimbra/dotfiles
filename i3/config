@@ -345,4 +345,7 @@ bindsym XF86MonBrightnessUp exec sudo light -A 5 # increase screen brightness
 bindsym XF86MonBrightnessDown exec sudo light -U 5 # decrease screen brightness
 
 # Screenshot binding
-bindsym Print exec flameshot gui
+bindsym Print exec flameshot gui -p ~/Pictures/Screenshots/
+
+# dimshift
+bindsym $mod + t exec urxvt -name float -e dimshift

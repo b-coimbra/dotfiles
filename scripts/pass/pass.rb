@@ -23,4 +23,4 @@ flags = {
   v: -> { view }
 }
 
-flags[ARGV[0][1].to_sym].call unless ARGV.empty?
+flags[ARGV[0].to_sym].call unless ARGV.empty?
