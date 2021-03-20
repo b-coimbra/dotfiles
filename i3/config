@@ -106,10 +106,14 @@ set $ws9 "9: 九"
 set $ws10 "10: 十"
 
 # switch to workspace
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
+bindsym $mod+1 workspace "1"
+# bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace "2"
+# bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace "3"
+# bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace "4"
+# bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
@@ -118,10 +122,14 @@ bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+1 move container to workspace "1"
+# bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace "2"
+# bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace "3"
+# bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace "4"
+# bindsym $mod+Shift+4 move container to workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5
 bindsym $mod+Shift+6 move container to workspace $ws6
 bindsym $mod+Shift+7 move container to workspace $ws7
@@ -170,13 +178,16 @@ bindsym $mod+r mode "resize"
 #}
 
 # start polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh --grayblocks
 
 # remove the title bar
 new_window none
 
 # wallpaper
 exec --no-startup-id sh ~/.fehbg
+
+# start picom (compton) compositor
+exec --no-startup-id picom -b
 
 # lock screen
 # bindsym $mod+Shift+x exec --no-startup-id i3lock-fancy
@@ -207,7 +218,7 @@ for_window [class=".*"] border pixel 1
 
 # gaps size
 gaps inner 10
-gaps outer 10
+gaps outer 5
 
 set $mode_gaps Gaps: (o)uter, (i)nner, (h)orizontal, (v)ertical, (t)op, (r)ight, (b)ottom, (l)eft
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
@@ -240,6 +251,7 @@ mode "$mode_gaps_outer" {
 
         bindsym Shift+plus  gaps outer all plus 5
         bindsym Shift+minus gaps outer all minus 5
+
         bindsym Shift+0     gaps outer all set 0
 
         bindsym Return mode "$mode_gaps"
@@ -349,3 +361,13 @@ bindsym $mod + p exec flameshot gui -p ~/sync/Images/screenshots
 
 # dimshift
 bindsym $mod + t exec urxvt -name float -e dimshift
+
+# Launch essential programs
+exec --no-startup-id emacs
+exec --no-startup-id discord
+exec --no-startup-id vivaldi-stable
+
+# Assign programs to workspaces
+assign [class="Vivaldi-stable"]   2
+assign [class="discord"]   3
+assign [class="Emacs"]   4
