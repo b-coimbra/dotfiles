@@ -15,6 +15,7 @@ alias v='vim'
 alias vi='vim'
 alias ls='ls --color=auto'
 alias fzf="fzf --preview 'cat {}'"
+alias ll="ls -la"
 alias empty-trash="rm -r ~/.trash/*"
 
 # toggle keyboard layout
@@ -35,7 +36,7 @@ shopt -s autocd
 cat ~/.cache/wal/sequences
 
 # To add support for TTYs this line can be optionally added.
-source ~/.cache/wal/colors-tty.sh
+# source ~/.cache/wal/colors-tty.sh
 
 # Remove dotnet telemetry
 

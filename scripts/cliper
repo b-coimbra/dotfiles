@@ -12,4 +12,4 @@ if format == 'jpeg'
   at_exit { `rm #{image}` }
 end
 
-system "xclip -selection clipboard -t image/#{format} -i #{image}"
+system "sudo xclip -selection clipboard -t image/#{format} -i \"#{image}\""
