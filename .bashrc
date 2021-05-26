@@ -15,7 +15,7 @@ alias v='vim'
 alias vi='vim'
 alias ls='ls --color=auto'
 alias fzf="fzf --preview 'cat {}'"
-alias ll="ls -la"
+alias ll="ls -lah"
 alias empty-trash="rm -r ~/.trash/*"
 
 # toggle keyboard layout
@@ -41,3 +41,6 @@ cat ~/.cache/wal/sequences
 # Remove dotnet telemetry
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+# Start starship
+eval "$(starship init bash)"

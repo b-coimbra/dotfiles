@@ -13,12 +13,12 @@ alias cat='bat'
 alias r='ranger'
 alias c='clear'
 alias v='nvim'
-alias vim='nvim'
+#alias vim='nvim'
 alias ls='ls --color=auto'
+alias ll='ls -la'
 alias fzf="fzf --preview 'cat {}'"
 
 alias empty-trash="rm -r ~/.trash/*"
-alias setup-wacom="sh ~/Documents/dotfiles/scripts/wacom.sh"
 
 # Disable dotnet telemetry
 
@@ -29,6 +29,10 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export VISUAL=nvim
 export EDITOR=nvim
 
+# Start starship
+
+starship init fish | source
+
 # Path
-export DENO_INSTALL="/home/nexi/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
+# export DENO_INSTALL="/home/nexi/.deno"
+# export PATH="$DENO_INSTALL/bin:$PATH"
