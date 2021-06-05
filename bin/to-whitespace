@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+# Replaces dashes and underscores with spaces in the current dir
+
+Dir['*'].each { |f| File.rename(f, f.gsub(/\-|\_/m, ' ')) if f != $0 } rescue Errno::ENOENT abort 'INVALID DIRECTORY'

@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# Copies an image path into the clipboard
+
 filename = ARGV[0] || abort('[!] Please specify an image.')
 extname  = File.extname(filename)
 format   = extname.tr(?., '').to_sym[/png/] || 'jpeg'

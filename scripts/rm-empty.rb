@@ -1,2 +1,0 @@
-require 'fileutils'
-Dir['*'].each { |f| (puts "[-] #{f} "; FileUtils::rm_rf(f)) if File.zero?(f) } rescue Errno::ENOENT abort 'Run as Admin' 
