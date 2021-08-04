@@ -2,6 +2,7 @@
 
 sudo pacman -S \
      ttf-iosevka ttf-dejavu ttf-font-awesome ttf-ms-fonts \
+     terminus-font-ttf \ ttf-pixeloperator
      noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra \
      otf-fira-code-symbol \
      gnu-free-fonts mplus-font siji
