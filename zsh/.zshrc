@@ -39,6 +39,9 @@ setxkbmap -model abnt2 -layout us,br -variant abnt2 -option grp:win_space_toggle
 # Alternative (blocks terminal for 0-3ms)
 # cat ~/.cache/wal/sequences
 
+# Custom PATH variables
+export PATH="$HOME/dev/dotfiles/bin:$PATH"
+
 # Load starship
 eval "$(starship init zsh)"
 
@@ -52,3 +55,4 @@ antigen bundle git
 antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
+
