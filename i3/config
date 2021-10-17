@@ -183,17 +183,8 @@ exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh --grayblocks
 # remove the title bar
 new_window none
 
-# wallpaper
-exec --no-startup-id sh ~/.fehbg
-
-# start picom (compton) compositor
-exec --no-startup-id picom -b
-
 # Layer fix for my keyboard
 exec --no-startup-id sh $HOME/dev/dotfiles/scripts/stupidlayers-run.sh
-
-# Megasync
-exec --no-startup-id megasync
 
 # lock screen
 # bindsym $mod+Shift+x exec --no-startup-id i3lock-fancy
@@ -372,6 +363,10 @@ bindsym $mod + t exec urxvt -name float -e dimshift
 exec --no-startup-id emacs
 exec --no-startup-id discord
 exec --no-startup-id vivaldi-stable
+
+exec --no-startup-id sh ~/.fehbg
+exec --no-startup-id picom -b 
+exec --no-startup-id megasync
 
 # Assign programs to workspaces
 assign [class="Vivaldi-stable"]   2

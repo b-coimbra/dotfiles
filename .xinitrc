@@ -4,4 +4,4 @@ exec i3
 xrdb ~/.Xresources
 
 # start imwheel
-imwheel -b 45
+exec imwheel -b 45

@@ -5,7 +5,7 @@ do
         "C-d")
                 mv "$file" ~/.trash ;;
         "C-c")
-                sudo ~/dev/dotfiles/scripts/bin "$file" ;;
+                sudo ~/dev/dotfiles/bin/cliper "$file" ;;
         "C-w")
                 wal -i "$file" ;;
         esac
