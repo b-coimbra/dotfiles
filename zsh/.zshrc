@@ -26,6 +26,7 @@ alias fzf="fzf --preview 'cat {}'"
 alias ll="ls -lah"
 alias empty-trash="rm -r ~/.trash/*"
 alias sudo="nocorrect sudo"
+alias python="bpython"
 
 # toggle keyboard layout
 setxkbmap -model abnt2 -layout us,br -variant abnt2 -option grp:win_space_toggle
@@ -36,7 +37,10 @@ setxkbmap -model abnt2 -layout us,br -variant abnt2 -option grp:win_space_toggle
 (cat ~/.cache/wal/sequences &)
 
 # Alternative (blocks terminal for 0-3ms)
-cat ~/.cache/wal/sequences
+# cat ~/.cache/wal/sequences
+
+# Custom PATH variables
+export PATH="$HOME/dev/dotfiles/bin:$PATH"
 
 # Load starship
 eval "$(starship init zsh)"
@@ -51,3 +55,4 @@ antigen bundle git
 antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
+
