@@ -27,3 +27,9 @@ colorscheme desert
 " set rtp+=/usr/lib/python3.7/site-packages/powerline/bindings/vim/
 " set laststatus=2
 " set t_Co=256
+
+"" VSVIM
+
+map <Space>r :vsc Refactor.Rename<CR>
+map <Space>i :vsc Edit.QuickInfo<CR>
+map <Space>p :vsc Edit.PeekDefinition<CR>
